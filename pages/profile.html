@@ -228,8 +228,8 @@
             loadGoalData();
             loadLanguage();
 
-            // Проверка API ключа
-            if (sessionStorage.getItem('apiKey')) {
+             // Проверка API ключа
+            if (localStorage.getItem('apiKey')) {
                 updateApiStatus(true);
             }
         }
@@ -354,7 +354,7 @@
                     throw new Error(t('messages.wrongPassword'));
                 }
 
-                sessionStorage.setItem('apiKey', apiKey);
+                localStorage.setItem('apiKey', apiKey);
                 updateApiStatus(true);
                 alert(t('messages.apiKeyLoaded'));
 
@@ -366,10 +366,10 @@
             }
         });
 
-        // Удаление API ключа
+// Удаление API ключа
         deleteApiBtn.addEventListener('click', function() {
             if (confirm(t('messages.confirmDelete'))) {
-                sessionStorage.removeItem('apiKey');
+                localStorage.removeItem('apiKey');
                 apiPassword.value = '';
                 selectedKeyFile = null;
                 apiKeyFile.value = '';
