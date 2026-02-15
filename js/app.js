@@ -3,8 +3,9 @@
 // Регистрация Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    // Используем путь от корня проекта, так как sw.js в корне
     navigator.serviceWorker
-      .register('../sw.js')
+      .register('../sw.js', { scope: '../' })
       .then(registration => {
         console.log('ServiceWorker registration successful:', registration.scope);
       })
@@ -18,9 +19,7 @@ if ('serviceWorker' in navigator) {
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-  // Предотвращаем автоматический показ промпта
   e.preventDefault();
-  // Сохраняем событие для последующего использования
   deferredPrompt = e;
   console.log('PWA install prompt available');
 });
@@ -29,3 +28,4 @@ window.addEventListener('appinstalled', () => {
   console.log('PWA installed successfully');
   deferredPrompt = null;
 });
+
