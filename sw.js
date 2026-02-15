@@ -3,58 +3,57 @@
 const CACHE_NAME = 'simplecalorie-v1';
 const urlsToCache = [
   // Корень и главная страница
- '/pages/index.html',
+ 'pages/index.html',
 
   // HTML страницы
-  '/pages/favorites.html',
-  '/pages/profile.html',
-  '/pages/add-product.html',
-  '/pages/product-card.html',
-  '/pages/create-dish.html',
-  '/pages/water.html',
+  'pages/favorites.html',
+  'pages/profile.html',
+  'pages/add-product.html',
+  'pages/product-card.html',
+  'pages/create-dish.html',
+  'pages/water.html',
 
   // CSS файлы
-  '/css/variables.css',
-  '/css/main.css',
-  '/css/components.css',
-  '/css/favorites.css',
-  '/css/create-dish.css',
-  '/css/add-product.css',
-  '/css/product-card.css',
-  '/css/profile.css',
-  '/css/water.css',
+  'css/variables.css',
+  'css/main.css',
+  'css/components.css',
+  'css/favorites.css',
+  'css/create-dish.css',
+  'css/add-product.css',
+  'css/product-card.css',
+  'css/profile.css',
+  'css/water.css',
 
   // JavaScript файлы
-  '/js/utils.js',
-  '/js/storage.js',
-  '/js/api.js',
-  '/js/crypto.js',
-  '/js/i18n.js',
-  '/js/app.js',
+  'js/utils.js',
+  'js/storage.js',
+  'js/api.js',
+  'js/crypto.js',
+  'js/i18n.js',
+  'js/app.js',
 
   // Языковые файлы
-  '/lang/ru.json',
-  '/lang/de.json',
+  'lang/ru.json',
+  'lang/de.json',
 
   // Данные
-  '/data/drinks.json',
-
+  'data/drinks.json',
   // Изображения - напитки
-  '/images/drinks/water.png',
-  '/images/drinks/hot.png',
-  '/images/drinks/juice.png',
-  '/images/drinks/cola.png',
-  '/images/drinks/low-calorie.png',
+  'images/drinks/water.png',
+  'images/drinks/hot.png',
+  'images/drinks/juice.png',
+  'images/drinks/cola.png',
+  'images/drinks/low-calorie.png',
   // иконки
-  '/images/icon-192.png',
-  '/images/icon-512.png',
+  'images/icon-192.png',
+  'images/icon-512.png',
 
   // Placeholder
-  '/images/placeholder.png',
+  'images/placeholder.png',
 
   // Конфигурация
-  '/config/api-config.json',
-  '/config/prompts.json'
+  'config/api-config.json',
+  'config/prompts.json'
 ];
 
 // Установка Service Worker
@@ -162,3 +161,4 @@ self.addEventListener('message', event => {
     self.skipWaiting();
   }
 });
+
