@@ -47,7 +47,7 @@ async function loadPrompts() {
  * @returns {boolean} true если ключ есть
  */
 function checkApiKey() {
-  return !!sessionStorage.getItem('apiKey');
+  return !!localStorage.getItem('apiKey');
 }
 
 /**
@@ -55,7 +55,7 @@ function checkApiKey() {
  * @returns {string|null} API ключ
  */
 function getApiKey() {
-  return sessionStorage.getItem('apiKey');
+  return localStorage.getItem('apiKey');
 }
 
 /**
@@ -277,3 +277,4 @@ if (typeof module !== 'undefined' && module.exports) {
     createLoadingProduct
   };
 }
+
