@@ -1,6 +1,6 @@
 // Service Worker для SimpleCalorie PWA
 
-const CACHE_NAME = 'simplecalorie-v1';
+const CACHE_NAME = 'simplecalorie-v2';
 const urlsToCache = [
   // Корень и главная страница
  'pages/index.html',
@@ -161,4 +161,5 @@ self.addEventListener('message', event => {
     self.skipWaiting();
   }
 });
+
 
