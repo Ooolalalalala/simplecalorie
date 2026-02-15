@@ -1,0 +1,220 @@
+/* Профиль - специфичные стили */
+
+/* Секция профиля */
+.profile-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Карточка с полями */
+.profile-card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Элемент профиля (вертикальный) */
+.profile-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) 0;
+}
+
+.profile-item:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Элемент профиля (горизонтальный - для селектов и кнопок) */
+.profile-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+}
+
+.profile-item-row:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Лейбл */
+.profile-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+/* Поле ввода */
+.profile-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: border-color var(--transition-fast);
+}
+
+.profile-input:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Поле с единицей измерения */
+.input-with-unit {
+  position: relative;
+  width: 100%;
+}
+
+.input-with-unit .profile-input {
+  padding-right: 50px;
+}
+
+.input-unit {
+  position: absolute;
+  right: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* Переключатель пола */
+.gender-toggle {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.gender-btn {
+  flex: 1;
+  height: 44px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gender-btn.active {
+  background-color: var(--text-primary);
+  color: white;
+  border-color: var(--text-primary);
+}
+
+.gender-btn:hover:not(.active) {
+  border-color: var(--text-primary);
+}
+
+/* Селект */
+.profile-select {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.profile-select:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Кнопка-ссылка */
+.btn-link {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: transparent;
+  border: none;
+  color: var(--color-info);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.btn-link:hover {
+  opacity: 0.7;
+}
+
+/* API статус */
+.api-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  transition: all var(--transition-fast);
+}
+
+.api-status.active {
+  border-color: var(--color-success);
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.status-icon {
+  font-size: var(--font-size-xl);
+}
+
+.status-text {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+/* Кнопка удаления API */
+.api-delete-btn {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.api-delete-btn:hover {
+  background-color: var(--color-danger);
+  color: white;
+}
+/* Кнопка загрузки API - по центру */
+.profile-card .btn-primary {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+/* Версия приложения */
+.app-version {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+  color: var(--text-light);
+  font-size: var(--font-size-xs);
+}
+
+/* Кнопка сохранения профиля */
+.save-profile-btn {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}

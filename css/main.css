@@ -1,0 +1,176 @@
+/* Импорт переменных */
+@import './variables.css';
+
+/* Импорт шрифта Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Сброс стилей */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Основные стили */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  overflow-x: hidden;
+}
+
+/* Контейнер приложения */
+.app-container {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  position: relative;
+  padding-bottom: var(--nav-height);
+}
+
+/* Заголовок приложения */
+.app-header {
+  height: var(--header-height);
+  background-color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header h1 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.header-icons {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.header-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.header-icon:hover {
+  opacity: 0.7;
+}
+
+/* Основной контент */
+.main-content {
+  padding: var(--spacing-md);
+}
+
+/* Нижняя навигация */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-width-content);
+  height: var(--nav-height);
+  background-color: var(--bg-secondary);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+}
+
+.nav-item.active {
+  color: var(--color-info);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.nav-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Кнопка добавления (плавающая) */
+.fab {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--spacing-md));
+  right: var(--spacing-md);
+  width: 56px;
+  height: 56px;
+  background-color: var(--text-primary);
+  color: white;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-fast);
+  z-index: 999;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+/* Утилиты */
+.text-center {
+  text-align: center;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+
+.hidden {
+  display: none;
+}

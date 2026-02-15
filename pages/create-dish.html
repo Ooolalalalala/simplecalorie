@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A1A1A">
+    <title>SimpleCalorie - Создать блюдо</title>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/create-dish.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Заголовок -->
+        <header class="app-header">
+            <a href="#" class="header-icon" id="backBtn">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <h1 data-i18n="dish.title">Создать блюдо</h1>
+            <div class="header-icon"></div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+
+            <!-- Фото блюда -->
+            <div class="dish-photo-section">
+                <input type="file" id="dishPhoto" accept="image/*" style="display: none;">
+                <label for="dishPhoto" class="dish-photo-upload">
+                    <div class="dish-photo-placeholder" id="photoPlaceholder">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span data-i18n="product.addPhoto">Добавить фото</span>
+                    </div>
+                    <img id="photoPreview" class="dish-photo-preview" style="display: none;">
+                </label>
+            </div>
+
+            <!-- Название -->
+            <div class="field-group">
+                <label class="field-label" data-i18n="dish.name">Название блюда</label>
+                <input type="text" class="field-input" id="dishName" data-i18n-placeholder="dish.name" placeholder="Название блюда">
+            </div>
+
+            <!-- КБЖУ + Вес (readonly) -->
+            <div class="dish-nutrients">
+                <h3 class="section-subtitle"><span data-i18n="nutrients.nutritionalValue">Пищевая ценность</span> (<span data-i18n="nutrients.autoCalculated">автопересчёт</span>)</h3>
+
+                <div class="nutrients-grid">
+                    <div class="nutrient-display">
+                        <span class="nutrient-label" data-i18n="nutrients.calories">Калории</span>
+                        <span class="nutrient-value" id="totalCalories">0 <span data-i18n="units.kcal">ккал</span></span>
+                    </div>
+                    <div class="nutrient-display">
+                        <span class="nutrient-label" data-i18n="nutrients.protein">Белки</span>
+                        <span class="nutrient-value" id="totalProtein">0 <span data-i18n="units.g">г</span></span>
+                    </div>
+                    <div class="nutrient-display">
+                        <span class="nutrient-label" data-i18n="nutrients.fat">Жиры</span>
+                        <span class="nutrient-value" id="totalFat">0 <span data-i18n="units.g">г</span></span>
+                    </div>
+                    <div class="nutrient-display">
+                        <span class="nutrient-label" data-i18n="nutrients.carbs">Углеводы</span>
+                        <span class="nutrient-value" id="totalCarbs">0 <span data-i18n="units.g">г</span></span>
+                    </div>
+                    <div class="nutrient-display">
+                        <span class="nutrient-label" data-i18n="nutrients.sugar">Сахар</span>
+                        <span class="nutrient-value" id="totalSugar">0 <span data-i18n="units.g">г</span></span>
+                    </div>
+                    <div class="nutrient-display">
+                        <span class="nutrient-label" data-i18n="dish.totalWeight">Общий вес</span>
+                        <span class="nutrient-value" id="totalWeight">0 <span data-i18n="units.g">г</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ингредиенты -->
+            <section class="ingredients-section">
+                <h2 class="section-title" data-i18n="dish.ingredients">Ингредиенты</h2>
+
+                <div class="ingredients-list" id="ingredientsList">
+                    <!-- Карточки ингредиентов будут здесь -->
+                    <div class="empty-state">
+                        <div class="empty-icon">🍽️</div>
+                        <p class="empty-text" data-i18n-html="dish.emptyState">Нет ингредиентов<br>Нажмите + чтобы добавить</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Кнопка добавления блюда -->
+            <button class="btn btn-primary add-dish-btn" id="addDishBtn" data-i18n="buttons.addDish">Добавить блюдо</button>
+
+        </main>
+
+        <!-- FAB кнопка -->
+        <button class="fab" id="addIngredientBtn">+</button>
+
+        <!-- Bottom Sheet меню ингредиентов -->
+        <div class="bottom-sheet" id="ingredientMenu">
+            <div class="bottom-sheet-overlay"></div>
+            <div class="bottom-sheet-content">
+                <div class="bottom-sheet-header">
+                    <h3 data-i18n="dish.addIngredient">Добавить ингредиент</h3>
+                    <button class="bottom-sheet-close">✕</button>
+                </div>
+                <div class="bottom-sheet-menu">
+                    <a href="favorites.html?mode=select" class="menu-item">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                        <span data-i18n="dish.fromFavorites">Из избранного</span>
+                    </a>
+                    <a href="add-product.html?target=dish" class="menu-item">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span data-i18n="dish.addProduct">Добавить продукт</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/i18n.js"></script>
+
+    <script>
+        let ingredients = [];
+        let dishPhotoBase64 = null;
+
+        // ======================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ======================
+        async function init() {
+            await initDB();
+            await initI18n();
+
+            // Загружаем сохранённый массив ингредиентов
+            loadIngredientsFromStorage();
+
+            // Проверяем новый ингредиент
+            checkForNewIngredient();
+
+            // Проверяем обновлённый ингредиент
+            checkForUpdatedIngredient();
+
+            // Рендерим и пересчитываем
+            renderIngredients();
+            recalculateNutrients();
+        }
+
+        // ======================
+        // СОХРАНЕНИЕ/ЗАГРУЗКА МАССИВА
+        // ======================
+        function saveIngredientsToStorage() {
+            localStorage.setItem('dishIngredients', JSON.stringify(ingredients));
+        }
+
+        function loadIngredientsFromStorage() {
+            const saved = localStorage.getItem('dishIngredients');
+            if (saved) {
+                try {
+                    ingredients = JSON.parse(saved);
+                } catch (error) {
+                    console.error('Error loading ingredients:', error);
+                    ingredients = [];
+                }
+            }
+        }
+
+        function clearIngredientsStorage() {
+            localStorage.removeItem('dishIngredients');
+        }
+
+        // ======================
+        // КНОПКА НАЗАД
+        // ======================
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            if (ingredients.length > 0) {
+                if (confirm(t('messages.sicher'))) {
+                    clearIngredientsStorage();
+                    window.location.href = 'index.html';
+                }
+            } else {
+                clearIngredientsStorage();
+                window.location.href = 'index.html';
+            }
+        });
+
+        // ======================
+        // ЗАГРУЗКА НОВОГО ИНГРЕДИЕНТА
+        // ======================
+        function checkForNewIngredient() {
+            const newIngredient = localStorage.getItem('newDishIngredient');
+
+            if (newIngredient) {
+                try {
+                    const ingredient = JSON.parse(newIngredient);
+                    ingredients.push(ingredient);
+                    localStorage.removeItem('newDishIngredient');
+                    saveIngredientsToStorage();
+                } catch (error) {
+                    console.error('Error parsing ingredient:', error);
+                }
+            }
+        }
+
+        // ======================
+        // ОБНОВЛЕНИЕ ИНГРЕДИЕНТА
+        // ======================
+        function checkForUpdatedIngredient() {
+            const updatedIngredient = localStorage.getItem('updatedDishIngredient');
+
+            if (updatedIngredient) {
+                try {
+                    const updated = JSON.parse(updatedIngredient);
+
+                    // Находим и заменяем в массиве
+                    const index = ingredients.findIndex(ing => ing.id === updated.id);
+                    if (index !== -1) {
+                        ingredients[index] = updated;
+                        saveIngredientsToStorage();
+                    }
+
+                    localStorage.removeItem('updatedDishIngredient');
+                } catch (error) {
+                    console.error('Error parsing updated ingredient:', error);
+                }
+            }
+        }
+
+        // ======================
+        // ФОТО БЛЮДА
+        // ======================
+        const dishPhoto = document.getElementById('dishPhoto');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoPlaceholder = document.getElementById('photoPlaceholder');
+
+        dishPhoto.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                dishPhotoBase64 = await blobToBase64(file);
+                photoPreview.src = dishPhotoBase64;
+                photoPreview.style.display = 'block';
+                photoPlaceholder.style.display = 'none';
+            }
+        });
+
+        // ======================
+        // BOTTOM SHEET
+        // ======================
+        const addIngredientBtn = document.getElementById('addIngredientBtn');
+        const ingredientMenu = document.getElementById('ingredientMenu');
+        const closeBtn = document.querySelector('.bottom-sheet-close');
+        const overlay = document.querySelector('.bottom-sheet-overlay');
+
+        addIngredientBtn.addEventListener('click', () => {
+            ingredientMenu.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            ingredientMenu.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            ingredientMenu.classList.remove('active');
+        });
+
+        // ======================
+        // РЕНДЕР ИНГРЕДИЕНТОВ
+        // ======================
+        function renderIngredients() {
+            const ingredientsList = document.getElementById('ingredientsList');
+
+            if (ingredients.length === 0) {
+                ingredientsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🍽️</div>
+                        <p class="empty-text">${t('dish.emptyState')}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            ingredientsList.innerHTML = '';
+
+            ingredients.forEach(ingredient => {
+                const card = createIngredientCard(ingredient);
+                ingredientsList.appendChild(card);
+            });
+        }
+
+        function createIngredientCard(ingredient) {
+            const card = document.createElement('a');
+            card.href = '#';
+            card.className = 'meal-card';
+            card.dataset.id = ingredient.id;
+
+            const photoSrc = ingredient.photo || '';
+            const imgHtml = photoSrc ?
+                `<img src="${photoSrc}" alt="${ingredient.name}" class="meal-image">` :
+                `<div class="meal-image meal-image-placeholder">
+                    <svg width="48" height="48" fill="#9CA3AF" viewBox="0 0 24 24">
+                        <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                        <circle cx="12" cy="13" r="3" fill="#E5E7EB"/>
+                    </svg>
+                </div>`;
+
+            card.innerHTML = `
+                ${imgHtml}
+                <div class="meal-info">
+                    <h3 class="meal-name">${ingredient.name}</h3>
+                    <p class="meal-calories">${roundCaloriesUp(ingredient.calories || 0)} ккал · ${Math.round(ingredient.amount || 0)}${ingredient.unit || 'г'}</p>
+                    <div class="meal-nutrients">
+                        <span class="nutrient-badge">
+                            <span class="nutrient-dot protein"></span>
+                            ${Math.round(ingredient.protein || 0)}г
+                        </span>
+                        <span class="nutrient-badge">
+                            <span class="nutrient-dot fat"></span>
+                            ${Math.round(ingredient.fat || 0)}г
+                        </span>
+                        <span class="nutrient-badge">
+                            <span class="nutrient-dot carbs"></span>
+                            ${Math.round(ingredient.carbs || 0)}г
+                        </span>
+                    </div>
+                </div>
+                <div class="meal-delete" data-id="${ingredient.id}">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+            `;
+
+            // Клик по карточке - редактировать
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.meal-delete')) return;
+                e.preventDefault();
+                editIngredient(ingredient.id);
+            });
+
+            // Удаление
+            const deleteBtn = card.querySelector('.meal-delete');
+            deleteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                removeIngredient(ingredient.id);
+            });
+
+            return card;
+        }
+
+        // ======================
+        // РЕДАКТИРОВАНИЕ ИНГРЕДИЕНТА
+        // ======================
+        function editIngredient(ingredientId) {
+            const ingredient = ingredients.find(ing => ing.id === ingredientId);
+            if (!ingredient) return;
+
+            // Сохраняем текущий массив
+            saveIngredientsToStorage();
+
+            // Сохраняем ингредиент для редактирования
+            localStorage.setItem('editDishIngredient', JSON.stringify(ingredient));
+
+            // Переходим в product-card
+            window.location.href = `product-card.html?productId=${ingredientId}&source=dish`;
+        }
+
+        // ======================
+        // УДАЛЕНИЕ ИНГРЕДИЕНТА
+        // ======================
+        function removeIngredient(ingredientId) {
+            const index = ingredients.findIndex(ing => ing.id === ingredientId);
+            if (index !== -1) {
+                ingredients.splice(index, 1);
+                saveIngredientsToStorage();
+                renderIngredients();
+                recalculateNutrients();
+            }
+        }
+
+        // ======================
+        // ПЕРЕСЧЁТ КБЖУ
+        // ======================
+        function recalculateNutrients() {
+            const totals = ingredients.reduce((sum, ing) => {
+                const factor = ing.amount / 100;
+                return {
+                    calories: sum.calories + (ing.calories * factor),
+                    protein: sum.protein + (ing.protein * factor),
+                    fat: sum.fat + (ing.fat * factor),
+                    carbs: sum.carbs + (ing.carbs * factor),
+                    sugar: sum.sugar + ((ing.sugar || 0) * factor),
+                    weight: sum.weight + ing.amount
+                };
+            }, { calories: 0, protein: 0, fat: 0, carbs: 0, sugar: 0, weight: 0 });
+
+            document.getElementById('totalCalories').innerHTML = `${Math.round(totals.calories)} <span data-i18n="units.kcal">ккал</span>`;
+            document.getElementById('totalProtein').innerHTML = `${totals.protein.toFixed(1)} <span data-i18n="units.g">г</span>`;
+            document.getElementById('totalFat').innerHTML = `${totals.fat.toFixed(1)} <span data-i18n="units.g">г</span>`;
+            document.getElementById('totalCarbs').innerHTML = `${totals.carbs.toFixed(1)} <span data-i18n="units.g">г</span>`;
+            document.getElementById('totalSugar').innerHTML = `${totals.sugar.toFixed(1)} <span data-i18n="units.g">г</span>`;
+            document.getElementById('totalWeight').innerHTML = `${Math.round(totals.weight)} <span data-i18n="units.g">г</span>`;
+        }
+
+        // ======================
+        // ДОБАВИТЬ БЛЮДО
+        // ======================
+        const addDishBtn = document.getElementById('addDishBtn');
+        addDishBtn.addEventListener('click', async function() {
+            if (ingredients.length === 0) {
+                alert(t('messages.addIngredient'));
+                return;
+            }
+
+            const dishName = document.getElementById('dishName').value;
+            if (!dishName.trim()) {
+                alert(t('messages.enterDishName'));
+                return;
+            }
+
+            // Пересчитываем общие КБЖУ для блюда
+            const totals = ingredients.reduce((sum, ing) => {
+                const factor = ing.amount / 100;
+                return {
+                    calories: sum.calories + (ing.calories * factor),
+                    protein: sum.protein + (ing.protein * factor),
+                    fat: sum.fat + (ing.fat * factor),
+                    carbs: sum.carbs + (ing.carbs * factor),
+                    sugar: sum.sugar + ((ing.sugar || 0) * factor),
+                    weight: sum.weight + ing.amount
+                };
+            }, { calories: 0, protein: 0, fat: 0, carbs: 0, sugar: 0, weight: 0 });
+
+            // Создаём объект блюда
+            const dish = {
+                id: generateUUID(),
+                name: dishName,
+                calories: parseFloat(totals.calories.toFixed(1)),
+                protein: parseFloat(totals.protein.toFixed(1)),
+                fat: parseFloat(totals.fat.toFixed(1)),
+                carbs: parseFloat(totals.carbs.toFixed(1)),
+                sugar: parseFloat(totals.sugar.toFixed(1)),
+                amount: Math.round(totals.weight),
+                unit: 'g',
+                category: '',
+                photo: dishPhotoBase64,
+                isDish: true,
+                ingredients: ingredients,
+                timestamp: Date.now()
+            };
+
+            try {
+                const currentDate = getCurrentDate();
+                await addProductToDay(currentDate, dish);
+
+                // Очищаем localStorage после успешного сохранения
+                clearIngredientsStorage();
+
+                alert(t('messages.dishAdded'));
+                window.location.href = `index.html?date=${currentDate}`;
+            } catch (error) {
+                console.error('Error adding dish:', error);
+                alert(t('messages.error'));
+            }
+        });
+
+        // ======================
+        // ЗАПУСК
+        // ======================
+        init();
+    </script>
+</body>
+</html>

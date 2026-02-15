@@ -1,0 +1,57 @@
+{
+  "water": {
+    "name": "Вода",
+    "image": "water.png",
+    "per100ml": {
+      "calories": 0,
+      "protein": 0,
+      "fat": 0,
+      "carbs": 0,
+      "sugar": 0
+    }
+  },
+  "hot": {
+    "name": "Горячий напиток",
+    "image": "hot.png",
+    "per100ml": {
+      "calories": 10,
+      "protein": 0,
+      "fat": 0,
+      "carbs": 3,
+      "sugar": 0
+    }
+  },
+  "juice": {
+    "name": "Сок",
+    "image": "juice.png",
+    "per100ml": {
+      "calories": 45,
+      "protein": 0.7,
+      "fat": 0.2,
+      "carbs": 10,
+      "sugar": 9
+    }
+  },
+  "cola": {
+    "name": "Кола",
+    "image": "cola.png",
+    "per100ml": {
+      "calories": 42,
+      "protein": 0,
+      "fat": 0,
+      "carbs": 10.6,
+      "sugar": 10.6
+    }
+  },
+  "low-calorie": {
+    "name": "Низкокалорийный напиток",
+    "image": "low-calorie.png",
+    "per100ml": {
+      "calories": 0.3,
+      "protein": 0,
+      "fat": 0,
+      "carbs": 0,
+      "sugar": 0
+    }
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "app": {
+    "name": "SimpleCalorie"
+  },
+  "additionally": {
+  },
+
+  "navigation": {
+    "back": "Назад",
+    "home": "Главная",
+    "favorites": "Избранное",
+    "profile": "Профиль"
+  },
+  "main": {
+    "today": "Сегодня",
+    "history": "История",
+    "average": "среднее",
+    "remaining": "осталось",
+    "addMenu": {
+      "title": "Добавить",
+      "product": "Добавить продукт",
+      "water": "Добавить воду",
+      "dish": "Добавить блюдо"
+    }
+  },
+  "nutrients": {
+    "calories": "Калории",
+    "protein": "Белки",
+    "fat": "Жиры",
+    "carbs": "Углеводы",
+    "sugar": "Сахар",
+    "water": "Вода",
+    "nutritionalValue": "Пищевая ценность",
+    "autoCalculated": "автопересчёт"
+  },
+  "units": {
+    "kcal": "ккал",
+    "g": "г",
+    "kg": "кг",
+    "ml": "мл",
+    "l": "л",
+    "pcs": "шт",
+    "portions": "порций",
+    "cm": "см"
+  },
+
+  "product": {
+    "name": "Название",
+    "photo": "Фото",
+    "volume": "Объем",
+    "portion": "Порция",
+    "amount": "Количество",
+    "category": "Категория",
+    "comment": "Комментарий для ИИ",
+    "manualMode": "Режим изменения",
+    "namePlaceholder": "Название продукта",
+    "selectPhoto": "Выбрать фото",
+    "addPhoto": "Добавить фото"
+  },
+  "categories": {
+    "all": "Все",
+    "hot": "Горячее",
+    "cold": "Холодное",
+    "drinks": "Напитки",
+    "sweets": "Сладкое",
+    "ingredients": "Ингредиенты",
+    "sauces": "Соусы"
+  },
+  "addProduct": {
+    "title": "Добавить продукт",
+    "methods": {
+      "manual": "Добавить описание или фото",
+      "aiPhoto": "Добавить с ИИ по фото",
+      "aiText": "Добавить с ИИ по описанию",
+      "table": "Добавить по таблице"
+    },
+    "optional": "опционально"
+  },
+  "dish": {
+    "title": "Создать блюдо",
+    "name": "Название блюда",
+    "ingredients": "Ингредиенты",
+    "addIngredient": "Добавить ингредиент",
+    "fromFavorites": "Из избранного",
+    "addProduct": "Добавить продукт",
+    "totalWeight": "Общий вес",
+    "emptyState": "Нет ингредиентов<br>Нажмите + чтобы добавить"
+  },
+
+  "favorites": {
+      "title": "Избранное",
+      "search": "Поиск по названию...",
+      "sortByDate": "Сортировать по дате",
+      "confirmDelete": "Точно удалить?",
+      "emptyState": "Нет избранного<br>Добавьте продукты в избранное",
+      "notFound": "Ничего не найдено",
+      "errorLoading": "Ошибка загрузки избранного",
+      "errorRemoving": "Ошибка удаления",
+      "errorMoving": "Ошибка перемещения",
+      "contextMenu": {
+        "delete": "Удалить из избранного",
+        "moveTop": "Переместить в самый верх",
+        "moveUp": "Переместить вверх",
+        "moveDown": "Переместить вниз",
+        "moveBottom": "Переместить в самый низ"
+      }
+    },
+  "profile": {
+    "title": "Профиль",
+    "personalData": "Персональные данные",
+    "goals": "Цели",
+    "settings": "Настройки",
+    "apiKey": "API ключ",
+    "gender": {
+      "label": "Пол",
+      "male": "Мужской",
+      "female": "Женский"
+    },
+    "age": "Возраст",
+    "height": "Рост",
+    "weight": "Текущий вес",
+    "goalCalories": "Цель по калориям",
+    "goalProtein": "Цель по белкам",
+    "goalFat": "Цель по жирам",
+    "goalCarbs": "Цель по углеводам",
+    "goalSugar": "Цель по сахару",
+    "goalWater": "Цель по воде",
+    "language": "Язык",
+    "apiStatus": {
+      "loaded": "API ключ загружен",
+      "notLoaded": "API ключ не загружен"
+    },
+    "apiPassword": "Пароль для шифрования",
+    "passwordPlaceholder": "Введите пароль",
+    "loadApiKey": "Загрузить API ключ",
+    "deleteApiKey": "Удалить API ключ",
+    "version": "версия"
+  },
+  "buttons": {
+    "add": "Добавить",
+    "save": "Сохранить",
+    "delete": "Удалить",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "close": "Закрыть",
+    "addDish": "Добавить блюдо",
+    "aktiv": "Активировать"
+  },
+  "water": {
+  "title": "Добавить напиток",
+  "category": "Категория",
+  "drinks": {
+    "water": "Вода",
+    "hot": "Горячий напиток",
+    "juice": "Сок",
+    "cola": "Кола",
+    "lowCalorie": "Низкокалорийный напиток"
+  }
+},
+  "messages": {
+    "selectVolume": "Выберите объем!",
+    "enterDishName": "Введите название блюда!",
+    "addIngredient": "Добавьте хотя бы один ингредиент!",
+    "dishAdded": "Блюдо добавлено в день!",
+    "drinkAdded": "Добавлено",
+    "apiKeyMissing": "API ключ не загружен. Перейдите в профиль, чтобы добавить ключ.",
+    "apiKeyLoaded": "API ключ успешно загружен!",
+    "apiKeyDeleted": "API ключ удалён",
+    "enterPassword": "Введите пароль для расшифровки!",
+    "confirmDelete": "Вы уверены, что хотите удалить API ключ?",
+    "error": "Ошибка",
+    "wrongPassword": "Неверный пароль или файл",
+    "productAdded": "Продукт добавлен!",
+    "sicher": "Отменить создание?"
+  }
+
+}

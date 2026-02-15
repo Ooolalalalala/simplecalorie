@@ -1,0 +1,220 @@
+/* Страница создания блюда */
+
+/* Фото блюда */
+.dish-photo-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.dish-photo-upload {
+  display: block;
+  cursor: pointer;
+}
+
+.dish-photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl);
+  background-color: var(--bg-secondary);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.dish-photo-placeholder:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.dish-photo-placeholder svg {
+  color: currentColor;
+}
+
+.dish-photo-placeholder span {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+
+.dish-photo-preview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+/* Поля */
+.field-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.field-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.field-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  transition: border-color var(--transition-fast);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* КБЖУ блюда */
+.dish-nutrients {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-subtitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.nutrients-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.nutrient-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.nutrient-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.nutrient-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+/* Секция ингредиентов */
+.ingredients-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Пустое состояние */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.3;
+}
+
+.empty-text {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+}
+
+/* Карточка ингредиента (переиспользуем стили meal-card) */
+.ingredient-card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: flex;
+  gap: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-fast);
+  position: relative;
+  cursor: pointer;
+}
+
+.ingredient-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.ingredient-image {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: var(--bg-primary);
+}
+
+.ingredient-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.ingredient-name {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.ingredient-amount {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.ingredient-delete {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.ingredient-delete:hover {
+  color: var(--color-danger);
+}
+
+/* Кнопка добавления блюда */
+.add-dish-btn {
+  width: 100%;
+  margin-bottom: var(--spacing-xl);
+}

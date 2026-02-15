@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A1A1A">
+    <title>SimpleCalorie - Профиль</title>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Заголовок -->
+        <header class="app-header">
+            <a href="javascript:history.back()" class="header-icon">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <h1 data-i18n="profile.title">Профиль</h1>
+            <div class="header-icon"></div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+
+            <!-- Персональные данные -->
+            <section class="profile-section">
+                <h2 class="section-title" data-i18n="profile.personalData">Персональные данные</h2>
+
+                <div class="profile-card">
+                    <!-- Пол -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.gender.label">Пол</label>
+                        <div class="gender-toggle">
+                            <button class="gender-btn" id="genderMale" data-i18n="profile.gender.male">Мужской</button>
+                            <button class="gender-btn" id="genderFemale" data-i18n="profile.gender.female">Женский</button>
+                        </div>
+                    </div>
+
+                    <!-- Возраст -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.age">Возраст</label>
+                        <input type="number" class="profile-input" id="age" data-i18n-placeholder="profile.age">
+                    </div>
+
+                    <!-- Рост -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.height">Рост</label>
+                        <div class="input-with-unit">
+                            <input type="number" class="profile-input" id="height" data-i18n-placeholder="profile.height">
+                            <span class="input-unit" data-i18n="units.cm">см</span>
+                        </div>
+                    </div>
+
+                    <!-- Вес -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.weight">Текущий вес</label>
+                        <div class="input-with-unit">
+                            <input type="number" class="profile-input" id="weight" data-i18n-placeholder="profile.weight">
+                            <span class="input-unit" data-i18n="units.kg">кг</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Цели -->
+            <section class="profile-section">
+                <h2 class="section-title" data-i18n="profile.goals">Цели</h2>
+
+                <div class="profile-card">
+                    <!-- Калории -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.goalCalories">Цель по калориям</label>
+                        <div class="input-with-unit">
+                            <input type="number" class="profile-input goal-input" id="goalCalories" data-goal="calories">
+                            <span class="input-unit" data-i18n="units.kcal">ккал</span>
+                        </div>
+                    </div>
+
+                    <!-- Белки -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.goalProtein">Цель по белкам</label>
+                        <div class="input-with-unit">
+                            <input type="number" class="profile-input goal-input" id="goalProtein" data-goal="protein">
+                            <span class="input-unit" data-i18n="units.g">г</span>
+                        </div>
+                    </div>
+
+                    <!-- Жиры -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.goalFat">Цель по жирам</label>
+                        <div class="input-with-unit">
+                            <input type="number" class="profile-input goal-input" id="goalFat" data-goal="fat">
+                            <span class="input-unit" data-i18n="units.g">г</span>
+                        </div>
+                    </div>
+
+                    <!-- Углеводы -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.goalCarbs">Цель по углеводам</label>
+                        <div class="input-with-unit">
+                            <input type="number" class="profile-input goal-input" id="goalCarbs" data-goal="carbs">
+                            <span class="input-unit" data-i18n="units.g">г</span>
+                        </div>
+                    </div>
+
+                    <!-- Сахар -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.goalSugar">Цель по сахару</label>
+                        <div class="input-with-unit">
+                            <input type="number" class="profile-input goal-input" id="goalSugar" data-goal="sugar">
+                            <span class="input-unit" data-i18n="units.g">г</span>
+                        </div>
+                    </div>
+
+                    <!-- Вода -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.goalWater">Цель по воде</label>
+                        <div class="input-with-unit">
+                            <input type="number" step="0.1" class="profile-input goal-input" id="goalWater" data-goal="water">
+                            <span class="input-unit" data-i18n="units.l">л</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Настройки -->
+            <section class="profile-section">
+                <h2 class="section-title" data-i18n="profile.settings">Настройки</h2>
+
+                <div class="profile-card">
+                    <!-- Язык -->
+                    <div class="profile-item-row">
+                        <span class="profile-label" data-i18n="profile.language">Язык</span>
+                        <select class="profile-select" id="languageSelect">
+                            <option value="ru">Русский</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API ключ -->
+            <section class="profile-section">
+                <h2 class="section-title" data-i18n="profile.apiKey">API ключ</h2>
+
+                <div class="profile-card">
+                    <!-- Статус -->
+                    <div class="api-status" id="apiStatus">
+                        <span class="status-icon">❌</span>
+                        <span class="status-text" data-i18n="profile.apiStatus.notLoaded">API ключ не загружен</span>
+                    </div>
+
+                    <!-- Пароль -->
+                    <div class="profile-item">
+                        <label class="profile-label" data-i18n="profile.apiPassword">Пароль для шифрования</label>
+                        <input type="password" class="profile-input" id="apiPassword" data-i18n-placeholder="profile.passwordPlaceholder">
+                    </div>
+
+                    <!-- Загрузка ключа -->
+                    <input type="file" id="apiKeyFile" accept=".key" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('apiKeyFile').click()" data-i18n="profile.loadApiKey">
+                        Загрузить API ключ
+                    </button>
+
+                    <!-- Активация ключа -->
+                    <button class="btn btn-primary" id="activateApiBtn" data-i18n="buttons.aktiv">
+                        Активировать
+                    </button>
+
+                    <!-- Удаление ключа -->
+                    <button class="btn btn-outline api-delete-btn" id="deleteApiBtn" style="display: none;" data-i18n="profile.deleteApiKey">
+                        Удалить API ключ
+                    </button>
+                </div>
+            </section>
+
+            <!-- Кнопка сохранения -->
+            <button class="btn btn-primary save-profile-btn" id="saveProfileBtn" data-i18n="buttons.save">Сохранить</button>
+
+            <!-- Версия -->
+            <div class="app-version">
+                <span data-i18n="profile.version">версия</span>: 1.0.0 (MVP)
+            </div>
+        </main>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/crypto.js"></script>
+    <script src="../js/i18n.js"></script>
+
+    <script>
+        let currentGoal = null;
+        let personalData = JSON.parse(localStorage.getItem('personalData') || '{"gender":"male","age":null,"height":null,"weight":null}');
+
+        // Инициализация
+        async function init() {
+            // Инициализация БД
+            await initDB();
+
+            // Загрузка переводов
+            await initI18n();
+
+            // Загрузка текущей цели
+            currentGoal = await getCurrentGoal();
+
+            // Если цели нет - создаём дефолтную
+            if (!currentGoal) {
+                currentGoal = await updateGoal({
+                    calories: 2000,
+                    protein: 100,
+                    fat: 70,
+                    carbs: 250,
+                    sugar: 50,
+                    water: 2000
+                });
+            }
+
+            // Заполнение полей
+            loadPersonalData();
+            loadGoalData();
+            loadLanguage();
+
+            // Проверка API ключа
+            if (sessionStorage.getItem('apiKey')) {
+                updateApiStatus(true);
+            }
+        }
+
+        // Загрузка персональных данных
+        function loadPersonalData() {
+            // Пол
+            if (personalData.gender === 'male') {
+                document.getElementById('genderMale').classList.add('active');
+            } else {
+                document.getElementById('genderFemale').classList.add('active');
+            }
+
+            // Остальные поля
+            if (personalData.age) document.getElementById('age').value = personalData.age;
+            if (personalData.height) document.getElementById('height').value = personalData.height;
+            if (personalData.weight) document.getElementById('weight').value = personalData.weight;
+        }
+
+        // Загрузка целей
+        function loadGoalData() {
+            document.getElementById('goalCalories').value = currentGoal.calories;
+            document.getElementById('goalProtein').value = currentGoal.protein;
+            document.getElementById('goalFat').value = currentGoal.fat;
+            document.getElementById('goalCarbs').value = currentGoal.carbs;
+            document.getElementById('goalSugar').value = currentGoal.sugar;
+            document.getElementById('goalWater').value = (currentGoal.water / 1000).toFixed(1);
+        }
+
+        // Загрузка языка
+        function loadLanguage() {
+            const lang = getCurrentLanguage();
+            document.getElementById('languageSelect').value = lang;
+        }
+
+        // Переключатель пола
+        document.getElementById('genderMale').addEventListener('click', function() {
+            document.getElementById('genderMale').classList.add('active');
+            document.getElementById('genderFemale').classList.remove('active');
+            personalData.gender = 'male';
+        });
+
+        document.getElementById('genderFemale').addEventListener('click', function() {
+            document.getElementById('genderFemale').classList.add('active');
+            document.getElementById('genderMale').classList.remove('active');
+            personalData.gender = 'female';
+        });
+
+        // Сохранение персональных данных
+        function savePersonalData() {
+            personalData.age = parseInt(document.getElementById('age').value) || null;
+            personalData.height = parseInt(document.getElementById('height').value) || null;
+            personalData.weight = parseInt(document.getElementById('weight').value) || null;
+            localStorage.setItem('personalData', JSON.stringify(personalData));
+        }
+
+        // Сохранение целей
+                async function saveGoals() {
+                    const newGoal = {
+                        calories: parseInt(document.getElementById('goalCalories').value),
+                        protein: parseInt(document.getElementById('goalProtein').value),
+                        fat: parseInt(document.getElementById('goalFat').value),
+                        carbs: parseInt(document.getElementById('goalCarbs').value),
+                        sugar: parseInt(document.getElementById('goalSugar').value),
+                        water: parseFloat(document.getElementById('goalWater').value) * 1000
+                    };
+
+                    const savedGoal = await updateGoal(newGoal);
+                    return savedGoal;
+                }
+
+                // Кнопка сохранить профиль
+                document.getElementById('saveProfileBtn').addEventListener('click', async function() {
+                    savePersonalData();
+                    await saveGoals();
+                    alert('Данные сохранены!');
+                });
+
+        // Переключение языка
+        document.getElementById('languageSelect').addEventListener('change', async function() {
+            await setLanguage(this.value);
+        });
+
+        // === API КЛЮЧ ===
+
+        const apiStatus = document.getElementById('apiStatus');
+        const apiPassword = document.getElementById('apiPassword');
+        const apiKeyFile = document.getElementById('apiKeyFile');
+        const activateApiBtn = document.getElementById('activateApiBtn');
+        const deleteApiBtn = document.getElementById('deleteApiBtn');
+
+        let selectedKeyFile = null;
+
+        // Выбор файла ключа
+        apiKeyFile.addEventListener('change', function(e) {
+            selectedKeyFile = e.target.files[0];
+            if (selectedKeyFile) {
+                console.log('Файл выбран:', selectedKeyFile.name);
+                document.querySelector('[data-i18n="profile.loadApiKey"]').textContent = 'Файл загружен ✓';
+            }
+        });
+
+        // Активация ключа
+        activateApiBtn.addEventListener('click', async function() {
+            const password = apiPassword.value;
+
+            if (!selectedKeyFile) {
+                alert('Выберите файл ключа!');
+                return;
+            }
+
+            if (!password) {
+                alert(t('messages.enterPassword'));
+                return;
+            }
+
+            try {
+                const encryptedKey = await selectedKeyFile.text();
+                const apiKey = decryptApiKey(encryptedKey, password);
+
+                if (!apiKey || apiKey.length < 20) {
+                    throw new Error(t('messages.wrongPassword'));
+                }
+
+                sessionStorage.setItem('apiKey', apiKey);
+                updateApiStatus(true);
+                alert(t('messages.apiKeyLoaded'));
+
+                // Очищаем файл
+                selectedKeyFile = null;
+                apiKeyFile.value = '';
+            } catch (error) {
+                alert(t('messages.error') + ': ' + error.message);
+            }
+        });
+
+        // Удаление API ключа
+        deleteApiBtn.addEventListener('click', function() {
+            if (confirm(t('messages.confirmDelete'))) {
+                sessionStorage.removeItem('apiKey');
+                apiPassword.value = '';
+                selectedKeyFile = null;
+                apiKeyFile.value = '';
+                updateApiStatus(false);
+                alert(t('messages.apiKeyDeleted'));
+            }
+        });
+
+        function updateApiStatus(hasKey) {
+            const statusText = document.querySelector('.status-text');
+            const statusIcon = document.querySelector('.status-icon');
+
+            if (hasKey) {
+                statusIcon.textContent = '✅';
+                statusText.textContent = t('profile.apiStatus.loaded');
+                apiStatus.classList.add('active');
+                deleteApiBtn.style.display = 'block';
+            } else {
+                statusIcon.textContent = '❌';
+                statusText.textContent = t('profile.apiStatus.notLoaded');
+                apiStatus.classList.remove('active');
+                deleteApiBtn.style.display = 'none';
+            }
+        }
+
+        // Запуск
+        init();
+    </script>
+</body>
+</html>

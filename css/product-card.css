@@ -1,0 +1,335 @@
+/* Карточка продукта - специфичные стили */
+
+/* Заголовок с фото */
+.product-header {
+  position: relative;
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.close-btn:hover {
+  opacity: 0.7;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  color: var(--text-primary);
+}
+
+.favorite-btn:hover {
+  opacity: 0.7;
+}
+
+/* Звезда - состояния */
+.favorite-btn .favorite-icon {
+  transition: fill var(--transition-fast);
+}
+
+/* Пустая звезда (по умолчанию) */
+.favorite-btn .favorite-icon {
+  fill: none;
+  stroke: currentColor;
+}
+
+/* Чёрная звезда (в избранном) */
+.favorite-btn.active .favorite-icon {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* Звёздочка * (другие граммовки) */
+.favorite-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  display: none;
+}
+
+.favorite-btn.different-amount .favorite-badge {
+  display: block;
+}
+
+/* Фото продукта */
+.product-photo {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: var(--spacing-xl) 0;
+}
+
+.photo-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  background-color: var(--bg-primary);
+}
+
+.photo-add {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--text-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast);
+}
+
+.photo-add:hover {
+  transform: scale(1.1);
+}
+
+/* Группа полей */
+.field-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.field-group-compact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Заголовок с переключателем в линию */
+.field-header-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.field-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.field-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  transition: border-color var(--transition-fast);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Поле с единицей */
+.input-with-unit {
+  position: relative;
+  width: 100%;
+}
+
+.input-with-unit .field-input {
+  padding-right: 60px;
+}
+
+/* Переключатель (компактный) */
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.toggle-text-left {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-right: var(--spacing-xs);
+}
+
+.toggle-input {
+  display: none;
+}
+
+.toggle-label {
+  width: 40px;
+  height: 22px;
+  background-color: var(--border-color);
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.toggle-label::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border-radius: var(--radius-full);
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  transition: transform var(--transition-fast);
+}
+
+.toggle-input:checked + .toggle-label {
+  background-color: var(--text-primary);
+}
+
+.toggle-input:checked + .toggle-label::after {
+  transform: translateX(18px);
+}
+
+/* Селектор порции */
+.portion-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.portion-select {
+  flex: 1;
+  height: 48px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.portion-divider {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-secondary);
+}
+
+/* Количество - 2 поля в ряд */
+.amount-row {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.amount-control {
+  flex: 1;
+  display: flex;
+  gap: var(--spacing-xs);
+  transition: opacity var(--transition-fast);
+}
+
+.amount-control .field-input {
+  flex: 1;
+}
+
+.unit-select {
+  width: 80px;
+  height: 48px;
+  padding: 0 var(--spacing-xs);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+/* Неактивные поля количества */
+.amount-control.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Секция нутриентов */
+.nutrients-section {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.section-subtitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Сетка БЖУ 2x2 */
+.nutrients-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+}
+
+/* Селект */
+.field-select {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+/* Кнопка сохранения */
+.save-btn {
+  width: 100%;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}

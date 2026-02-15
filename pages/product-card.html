@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A1A1A">
+    <title>SimpleCalorie - Карточка продукта</title>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/product-card.css">
+
+    <style>
+        .product-header {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: #F3F4F6;
+            overflow: hidden;
+        }
+
+        .photo-gallery {
+            width: 100%;
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            display: flex;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        .photo-gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        .photo-slide {
+            min-width: 100%;
+            height: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F3F4F6;
+        }
+
+        .photo-arrows {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 var(--spacing-sm);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .photo-arrow {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: all;
+        }
+
+        .photo-arrow.visible {
+            display: flex;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: var(--spacing-md);
+            left: var(--spacing-md);
+            z-index: 100;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Заголовок с фото -->
+        <header class="product-header">
+          <a href="javascript:history.back()" class="close-btn">
+             <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </a>
+
+            <div class="photo-gallery" id="photoGallery">
+                <div class="photo-slide" id="slide1">
+                    <img id="productPhoto" src="" alt="Продукт" style="display: none;">
+                    <div id="photoPlaceholder" class="photo-placeholder">
+                        <svg width="80" height="80" fill="#9CA3AF" viewBox="0 0 24 24">
+                            <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                            <circle cx="12" cy="13" r="3" fill="#E5E7EB"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="photo-slide" id="slide2">
+                      <img id="productPhoto2" src="" alt="Фото 2" style="display: none;">
+                      <div id="photoPlaceholder2" class="photo-placeholder">
+                          <svg width="80" height="80" fill="#9CA3AF" viewBox="0 0 24 24">
+                              <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                              <circle cx="12" cy="13" r="3" fill="#E5E7EB"/>
+                          </svg>
+                      </div>
+                  </div>
+            </div>
+
+            <div class="photo-arrows">
+                <button class="photo-arrow" id="prevPhoto" onclick="scrollPhotos(-1)">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <button class="photo-arrow" id="nextPhoto" onclick="scrollPhotos(1)">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+
+            <input type="file" id="photoInput" accept="image/*" style="display: none;">
+            <button class="photo-add" onclick="document.getElementById('photoInput').click()">
+                <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+            </button>
+
+            <button class="favorite-btn" id="favoriteBtn">
+                <svg class="favorite-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                </svg>
+                <span class="favorite-badge">*</span>
+            </button>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Название -->
+            <div class="field-group">
+                <label class="field-label" data-i18n="product.name">Название</label>
+                <input type="text" class="field-input" id="productName" data-i18n-placeholder="product.namePlaceholder">
+            </div>
+
+            <!-- Калории -->
+            <div class="field-group">
+                <label class="field-label" data-i18n="nutrients.calories">Калории</label>
+                <div class="input-with-unit">
+                    <input type="number" step="0.1" class="field-input" id="productCalories" placeholder="0">
+                    <span class="input-unit" data-i18n="units.kcal">ккал</span>
+                </div>
+            </div>
+
+            <!-- Порция с переключателем -->
+            <div class="field-group">
+                <div class="field-header-inline">
+                    <label class="field-label" data-i18n="product.portion">Порция</label>
+                    <div class="toggle-switch">
+                        <span class="toggle-text-left" data-i18n="product.manualMode">Режим изменения</span>
+                        <input type="checkbox" id="manualMode" class="toggle-input">
+                        <label for="manualMode" class="toggle-label"></label>
+                    </div>
+                </div>
+                <div class="portion-selector">
+                    <select class="portion-select" id="portionNumerator">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <span class="portion-divider">/</span>
+                    <select class="portion-select" id="portionDenominator">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Количество (2 поля) -->
+            <div class="field-group">
+                <div class="field-header-inline">
+                    <label class="field-label" data-i18n="product.amount">Количество</label>
+                    <div class="toggle-switch">
+                        <span class="toggle-text-left">г / шт</span>
+                        <input type="checkbox" id="unitMode" class="toggle-input">
+                        <label for="unitMode" class="toggle-label"></label>
+                    </div>
+                </div>
+                <div class="amount-row">
+                    <!-- Граммы -->
+                    <div class="amount-control" id="gramsControl">
+                        <input type="number" class="field-input" id="amountGrams" placeholder="0">
+                        <select class="unit-select" id="unitGrams">
+                            <option value="g" selected data-i18n="units.g">г</option>
+                            <option value="kg" data-i18n="units.kg">кг</option>
+                            <option value="ml" data-i18n="units.ml">мл</option>
+                            <option value="l" data-i18n="units.l">л</option>
+                        </select>
+                    </div>
+                    <!-- Штуки -->
+                    <div class="amount-control disabled" id="piecesControl">
+                        <input type="number" class="field-input" id="amountPieces" placeholder="0">
+                        <select class="unit-select" id="unitPieces">
+                            <option value="pcs" selected data-i18n="units.pcs">шт</option>
+                            <option value="portions" data-i18n="units.portions">порций</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- БЖУ + Сахар (сетка 2x2) -->
+            <div class="nutrients-section">
+                <h3 class="section-subtitle" data-i18n="nutrients.nutritionalValue">Пищевая ценность</h3>
+
+                <div class="nutrients-grid">
+                    <div class="field-group-compact">
+                        <label class="field-label"><span data-i18n="nutrients.protein">Белки</span> (<span data-i18n="units.g">г</span>)</label>
+                        <input type="number" step="0.1" class="field-input" id="productProtein" placeholder="0">
+                    </div>
+
+                    <div class="field-group-compact">
+                        <label class="field-label"><span data-i18n="nutrients.fat">Жиры</span> (<span data-i18n="units.g">г</span>)</label>
+                        <input type="number" step="0.1" class="field-input" id="productFat" placeholder="0">
+                    </div>
+
+                    <div class="field-group-compact">
+                        <label class="field-label"><span data-i18n="nutrients.carbs">Углеводы</span> (<span data-i18n="units.g">г</span>)</label>
+                        <input type="number" step="0.1" class="field-input" id="productCarbs" placeholder="0">
+                    </div>
+
+                    <div class="field-group-compact">
+                        <label class="field-label"><span data-i18n="nutrients.sugar">Сахар</span> (<span data-i18n="units.g">г</span>)</label>
+                        <input type="number" step="0.1" class="field-input" id="productSugar" placeholder="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Категория -->
+            <div class="field-group">
+                <label class="field-label" data-i18n="product.category">Категория</label>
+                <select class="field-select" id="productCategory">
+                    <option value="">—</option>
+                    <option value="hot" data-i18n="categories.hot">Горячее</option>
+                    <option value="cold" data-i18n="categories.cold">Холодное</option>
+                    <option value="drinks" data-i18n="categories.drinks">Напитки</option>
+                    <option value="sweets" data-i18n="categories.sweets">Сладкое</option>
+                    <option value="ingredients" data-i18n="categories.ingredients">Ингредиенты</option>
+                    <option value="sauces" data-i18n="categories.sauces">Соусы</option>
+                </select>
+            </div>
+
+            <!-- Кнопка сохранения -->
+            <button class="btn btn-primary save-btn" id="saveBtn" data-i18n="buttons.save">Сохранить</button>
+        </main>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/i18n.js"></script>
+
+    <script>
+        let currentProduct = null;
+        let productSource = null;
+        let productDate = null;
+        let originalData = null;
+        let currentPhotoIndex = 0;
+
+        // Инициализация
+        async function init() {
+            await initDB();
+            await initI18n();
+
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('productId');
+            productSource = params.get('source');
+            productDate = params.get('date');
+
+            if (!productId || !productSource) {
+                alert('Ошибка: недостаточно данных');
+                history.back();
+                return;
+            }
+
+            // Для блюда не нужна дата
+            if (productSource !== 'dish' && productSource !== 'favorites' && !productDate) {
+                alert('Ошибка: недостаточно данных');
+                history.back();
+                return;
+            }
+
+            await loadProduct(productId);
+
+            originalData = {
+                calories: currentProduct.calories,
+                protein: currentProduct.protein,
+                fat: currentProduct.fat,
+                carbs: currentProduct.carbs,
+                sugar: currentProduct.sugar,
+                amount: currentProduct.amount
+            };
+
+            fillFields();
+            await updateFavoriteButton();
+            updatePhotoArrows();
+        }
+
+        async function loadProduct(productId) {
+            if (productSource === 'day') {
+                const dayData = await getDayData(productDate);
+                currentProduct = dayData.products.find(p => p.id === productId);
+            } else if (productSource === 'favorites') {
+                const favorites = await getAllFavorites();
+                currentProduct = favorites.find(p => p.id === productId);
+            } else if (productSource === 'dish') {
+                // Загружаем из localStorage (ингредиент блюда)
+                const dishIngredient = localStorage.getItem('editDishIngredient');
+                if (dishIngredient) {
+                    currentProduct = JSON.parse(dishIngredient);
+                }
+            }
+
+            if (!currentProduct) {
+                alert('Продукт не найден');
+                history.back();
+            }
+        }
+
+        function fillFields() {
+            document.getElementById('productName').value = currentProduct.name || '';
+            document.getElementById('productCalories').value = currentProduct.calories || 0;
+            document.getElementById('productProtein').value = currentProduct.protein || 0;
+            document.getElementById('productFat').value = currentProduct.fat || 0;
+            document.getElementById('productCarbs').value = currentProduct.carbs || 0;
+            document.getElementById('productSugar').value = currentProduct.sugar || 0;
+            document.getElementById('productCategory').value = currentProduct.category || '';
+
+            if (currentProduct.portionNumerator) {
+                document.getElementById('portionNumerator').value = currentProduct.portionNumerator;
+            }
+            if (currentProduct.portionDenominator) {
+                document.getElementById('portionDenominator').value = currentProduct.portionDenominator;
+            }
+
+            if (currentProduct.unit === 'pcs' || currentProduct.unit === 'portions') {
+                document.getElementById('unitMode').checked = true;
+                document.getElementById('gramsControl').classList.add('disabled');
+                document.getElementById('piecesControl').classList.remove('disabled');
+                document.getElementById('amountPieces').value = currentProduct.amount || 0;
+                document.getElementById('unitPieces').value = currentProduct.unit;
+            } else {
+                document.getElementById('amountGrams').value = currentProduct.amount || 0;
+                document.getElementById('unitGrams').value = currentProduct.unit || 'g';
+            }
+
+            // Фото
+            if (currentProduct.photo) {
+                document.getElementById('productPhoto').src = currentProduct.photo;
+                document.getElementById('productPhoto').style.display = 'block';
+                document.getElementById('photoPlaceholder').style.display = 'none';
+            }
+
+            if (currentProduct.photo2) {
+                  document.getElementById('productPhoto2').src = currentProduct.photo2;
+                  document.getElementById('productPhoto2').style.display = 'block';
+                  document.getElementById('photoPlaceholder2').style.display = 'none';
+              }
+        }
+
+        document.getElementById('unitMode').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('gramsControl').classList.add('disabled');
+                document.getElementById('piecesControl').classList.remove('disabled');
+            } else {
+                document.getElementById('gramsControl').classList.remove('disabled');
+                document.getElementById('piecesControl').classList.add('disabled');
+            }
+        });
+
+        function recalculateNutrients() {
+            const manualMode = document.getElementById('manualMode').checked;
+            if (manualMode) return;
+
+            const numerator = parseInt(document.getElementById('portionNumerator').value) || 1;
+            const denominator = parseInt(document.getElementById('portionDenominator').value) || 1;
+            const portionFactor = numerator / denominator;
+
+            // Пересчитываем количество
+            const newAmount = originalData.amount * portionFactor;
+
+            if (document.getElementById('unitMode').checked) {
+                document.getElementById('amountPieces').value = Math.round(newAmount);
+            } else {
+                document.getElementById('amountGrams').value = Math.round(newAmount);
+            }
+
+            // Пересчитываем КБЖУ
+            document.getElementById('productCalories').value = (originalData.calories * portionFactor).toFixed(1);
+            document.getElementById('productProtein').value = (originalData.protein * portionFactor).toFixed(1);
+            document.getElementById('productFat').value = (originalData.fat * portionFactor).toFixed(1);
+            document.getElementById('productCarbs').value = (originalData.carbs * portionFactor).toFixed(1);
+            document.getElementById('productSugar').value = (originalData.sugar * portionFactor).toFixed(1);
+        }
+
+        document.getElementById('portionNumerator').addEventListener('change', recalculateNutrients);
+        document.getElementById('portionDenominator').addEventListener('change', recalculateNutrients);
+        document.getElementById('amountGrams').addEventListener('input', recalculateNutrients);
+        document.getElementById('amountPieces').addEventListener('input', recalculateNutrients);
+
+        // Загрузка фото
+        document.getElementById('photoInput').addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const base64 = await blobToBase64(file);
+
+                        if (currentPhotoIndex === 0) {
+                            // Заменяем первое фото
+                            document.getElementById('productPhoto').src = base64;
+                            document.getElementById('productPhoto').style.display = 'block';
+                            document.getElementById('photoPlaceholder').style.display = 'none';
+                            currentProduct.photo = base64;
+                        } else {
+                            // Заменяем второе фото
+                            document.getElementById('productPhoto2').src = base64;
+                            document.getElementById('productPhoto2').style.display = 'block';
+                            document.getElementById('photoPlaceholder2').style.display = 'none';
+                            currentProduct.photo2 = base64;
+                        }
+                    }
+                });
+
+        // Стрелки фото
+        function updatePhotoArrows() {
+                    document.getElementById('prevPhoto').classList.add('visible');
+                    document.getElementById('nextPhoto').classList.add('visible');
+                }
+
+        function scrollPhotos(direction) {
+            const gallery = document.getElementById('photoGallery');
+            const slideWidth = gallery.offsetWidth;
+            currentPhotoIndex = (currentPhotoIndex + direction + 2) % 2;
+            gallery.scrollTo({
+                left: currentPhotoIndex * slideWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        async function updateFavoriteButton() {
+            const name = document.getElementById('productName').value;
+            const amount = parseFloat(document.getElementById('amountGrams').value) ||
+                          parseFloat(document.getElementById('amountPieces').value) || 0;
+
+            const check = await checkInFavorites(name, amount);
+            const btn = document.getElementById('favoriteBtn');
+            const badge = btn.querySelector('.favorite-badge');
+
+            if (check.exact) {
+                btn.classList.add('active');
+                badge.style.display = 'none';
+            } else if (check.different) {
+                btn.classList.add('active');
+                badge.style.display = 'inline';
+            } else {
+                btn.classList.remove('active');
+                badge.style.display = 'none';
+            }
+        }
+
+        document.getElementById('favoriteBtn').addEventListener('click', async function() {
+            // Всегда добавляем в избранное с новым ID
+            const productData = collectProductData();
+            productData.id = generateUUID(); // Новый ID для каждой записи
+            await addToFavorites(productData);
+            await updateFavoriteButton();
+            alert('Добавлено в избранное!');
+        });
+
+        function collectProductData() {
+            const isGrams = !document.getElementById('unitMode').checked;
+
+            return {
+                id: currentProduct.id,
+                name: document.getElementById('productName').value,
+                calories: parseFloat(document.getElementById('productCalories').value) || 0,
+                protein: parseFloat(document.getElementById('productProtein').value) || 0,
+                fat: parseFloat(document.getElementById('productFat').value) || 0,
+                carbs: parseFloat(document.getElementById('productCarbs').value) || 0,
+                sugar: parseFloat(document.getElementById('productSugar').value) || 0,
+                amount: isGrams ?
+                    parseFloat(document.getElementById('amountGrams').value) || 0 :
+                    parseFloat(document.getElementById('amountPieces').value) || 0,
+                unit: isGrams ?
+                    document.getElementById('unitGrams').value :
+                    document.getElementById('unitPieces').value,
+                category: document.getElementById('productCategory').value,
+                photo: currentProduct.photo || null,
+                photo2: currentProduct.photo2 || null,
+                portionNumerator: parseInt(document.getElementById('portionNumerator').value),
+                portionDenominator: parseInt(document.getElementById('portionDenominator').value),
+                isDish: currentProduct.isDish || false,
+                ingredients: currentProduct.ingredients || []
+            };
+        }
+
+        document.getElementById('saveBtn').addEventListener('click', async function() {
+            const updatedProduct = collectProductData();
+
+            updatedProduct.calories = parseFloat(updatedProduct.calories.toFixed(1));
+            updatedProduct.protein = parseFloat(updatedProduct.protein.toFixed(1));
+            updatedProduct.fat = parseFloat(updatedProduct.fat.toFixed(1));
+            updatedProduct.carbs = parseFloat(updatedProduct.carbs.toFixed(1));
+            updatedProduct.sugar = parseFloat(updatedProduct.sugar.toFixed(1));
+
+            if (productSource === 'day') {
+                await updateProductInDay(productDate, currentProduct.id, updatedProduct);
+                alert('Изменения сохранены!');
+                history.back();
+            } else if (productSource === 'favorites') {
+                await removeFromFavorites(currentProduct.id);
+                await addToFavorites(updatedProduct);
+                alert('Изменения сохранены!');
+                history.back();
+            } else if (productSource === 'dish') {
+                // Сохраняем в localStorage для возврата в create-dish
+                localStorage.setItem('updatedDishIngredient', JSON.stringify(updatedProduct));
+                window.location.href = 'create-dish.html';
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>

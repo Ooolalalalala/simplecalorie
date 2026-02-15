@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A1A1A">
+    <title>SimpleCalorie - Избранное</title>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/favorites.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Заголовок -->
+        <header class="app-header">
+            <a href="javascript:history.back()" class="header-icon">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <h1 data-i18n="favorites.title">Избранное</h1>
+            <div class="header-icon"></div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+
+            <!-- Поиск -->
+            <div class="search-bar">
+                <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" data-i18n-placeholder="favorites.search" placeholder="Поиск по названию...">
+            </div>
+
+            <!-- Фильтры -->
+            <div class="filters-row">
+              <!-- ЗАКОММЕНТИРОВАНО: Кнопка сортировки по дате
+                <button class="sort-btn" id="sortBtn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"/>
+                    </svg>
+                    <span data-i18n="favorites.sortByDate">Сортировать по дате</span>
+                </button>
+                -->
+                <!-- Селектор категории -->
+                <select class="category-select" id="categorySelect">
+                    <option value="all" selected data-i18n="categories.all">Все</option>
+                    <option value="hot" data-i18n="categories.hot">Горячее</option>
+                    <option value="cold" data-i18n="categories.cold">Холодное</option>
+                    <option value="drinks" data-i18n="categories.drinks">Напитки</option>
+                    <option value="sweets" data-i18n="categories.sweets">Сладкое</option>
+                    <option value="ingredients" data-i18n="categories.ingredients">Ингредиенты</option>
+                    <option value="sauces" data-i18n="categories.sauces">Соусы</option>
+                </select>
+            </div>
+
+            <!-- Список избранного -->
+            <div class="favorites-list" id="favoritesList">
+                <!-- Карточки будут генерироваться JS -->
+            </div>
+
+        </main>
+
+        <!-- Контекстное меню (при долгом нажатии) -->
+        <div class="context-menu" id="contextMenu">
+            <button class="context-item delete">
+                <span class="context-icon">✕</span>
+                <span data-i18n="favorites.contextMenu.delete">Удалить из избранного</span>
+            </button>
+            <button class="context-item move-top">
+                <span class="context-icon">⇈</span>
+                <span data-i18n="favorites.contextMenu.moveTop">Переместить в самый верх</span>
+            </button>
+            <button class="context-item move-up">
+                <span class="context-icon">⬆️</span>
+                <span data-i18n="favorites.contextMenu.moveUp">Переместить вверх</span>
+            </button>
+            <button class="context-item move-down">
+                <span class="context-icon">⬇️</span>
+                <span data-i18n="favorites.contextMenu.moveDown">Переместить вниз</span>
+            </button>
+            <button class="context-item move-bottom">
+                <span class="context-icon">⇊</span>
+                <span data-i18n="favorites.contextMenu.moveBottom">Переместить в самый низ</span>
+            </button>
+        </div>
+        <div class="context-overlay" id="contextOverlay"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/i18n.js"></script>
+
+    <script>
+        // ======================
+        // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+        // ======================
+        let allFavorites = [];
+        let filteredFavorites = [];
+        let longPressTimer;
+        let currentCard = null;
+        let sortAscending = false;
+        let currentCategory = 'all';
+        let currentSearchQuery = '';
+        let selectMode = false;
+
+        const contextMenu = document.getElementById('contextMenu');
+        const contextOverlay = document.getElementById('contextOverlay');
+        const favoritesList = document.getElementById('favoritesList');
+        const searchInput = document.getElementById('searchInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const sortBtn = document.getElementById('sortBtn');
+
+        // ======================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ======================
+        async function init() {
+            await initDB();
+            await initI18n();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            selectMode = urlParams.get('mode') === 'select';
+
+            await loadFavorites();
+
+            searchInput.addEventListener('input', debounce(handleSearch, 300));
+            categorySelect.addEventListener('change', handleCategoryFilter);
+            if (sortBtn) {
+                sortBtn.addEventListener('click', handleSort);
+            }
+        }
+
+        // ======================
+        // ЗАГРУЗКА ДАННЫХ
+        // ======================
+        async function loadFavorites() {
+            try {
+                allFavorites = await getAllFavorites();
+                applyFilters();
+            } catch (error) {
+                console.error('Error loading favorites:', error);
+                showEmptyState(t('favorites.errorLoading'));
+            }
+        }
+
+        // ======================
+        // ФИЛЬТРАЦИЯ И СОРТИРОВКА
+        // ======================
+        function applyFilters() {
+            let result = [...allFavorites];
+
+            if (currentCategory !== 'all') {
+                result = result.filter(f => f.category === currentCategory);
+            }
+
+            if (currentSearchQuery) {
+                const query = currentSearchQuery.toLowerCase();
+                result = result.filter(f =>
+                    f.name.toLowerCase().includes(query)
+                );
+            }
+
+            if (sortAscending) {
+                result.sort((a, b) => {
+                    const dateA = a.timestamp || 0;
+                    const dateB = b.timestamp || 0;
+                    return dateA - dateB;
+                });
+            } else {
+                result.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+            }
+
+            filteredFavorites = result;
+            renderFavorites();
+        }
+
+        function handleSearch(e) {
+            currentSearchQuery = e.target.value;
+            applyFilters();
+        }
+
+        function handleCategoryFilter(e) {
+            currentCategory = e.target.value;
+            applyFilters();
+        }
+
+        function handleSort() {
+            sortAscending = !sortAscending;
+            if (sortBtn) {
+                sortBtn.classList.toggle('active', sortAscending);
+            }
+
+            if (sortAscending) {
+                filteredFavorites = [...allFavorites];
+
+                if (currentCategory !== 'all') {
+                    filteredFavorites = filteredFavorites.filter(f => f.category === currentCategory);
+                }
+                if (currentSearchQuery) {
+                    const query = currentSearchQuery.toLowerCase();
+                    filteredFavorites = filteredFavorites.filter(f =>
+                        f.name.toLowerCase().includes(query)
+                    );
+                }
+
+                filteredFavorites.sort((a, b) => {
+                    const dateA = a.timestamp || 0;
+                    const dateB = b.timestamp || 0;
+                    return dateA - dateB;
+                });
+
+                renderFavorites();
+            } else {
+                applyFilters();
+            }
+        }
+
+        // ======================
+        // РЕНДЕРИНГ
+        // ======================
+        function renderFavorites() {
+            if (filteredFavorites.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            favoritesList.innerHTML = filteredFavorites.map(fav => createFavoriteCard(fav)).join('');
+            attachCardEvents();
+        }
+
+        function createFavoriteCard(favorite) {
+            const calories = Math.round(favorite.calories || 0);
+            const protein = (favorite.protein || 0).toFixed(1);
+            const fat = (favorite.fat || 0).toFixed(1);
+            const carbs = (favorite.carbs || 0).toFixed(1);
+            const amount = Math.round(favorite.amount || 0);
+            const unit = favorite.unit || 'г';
+            const imgSrc = favorite.photo || '../images/placeholder.png';
+
+            return `
+                <div class="favorite-card" data-id="${favorite.id}">
+                    <img src="${imgSrc}" alt="${favorite.name}" class="favorite-image" onerror="this.src='../images/placeholder.png'">
+                    <div class="favorite-info">
+                        <h3 class="favorite-name">${favorite.name}</h3>
+                        <p class="favorite-calories">${calories} ккал · ${amount}${unit}</p>
+                        <div class="favorite-nutrients">
+                            <span class="nutrient-badge">
+                                <span class="nutrient-dot protein"></span>
+                                ${protein}г
+                            </span>
+                            <span class="nutrient-badge">
+                                <span class="nutrient-dot fat"></span>
+                                ${fat}г
+                            </span>
+                            <span class="nutrient-badge">
+                                <span class="nutrient-dot carbs"></span>
+                                ${carbs}г
+                            </span>
+                        </div>
+                    </div>
+                    <button class="favorite-add">+</button>
+                </div>
+            `;
+        }
+
+        function showEmptyState(message = null) {
+            const msg = message || (currentSearchQuery || currentCategory !== 'all'
+                ? t('favorites.notFound')
+                : t('favorites.emptyState'));
+
+            favoritesList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">⭐</div>
+                    <p class="empty-text">${msg}</p>
+                </div>
+            `;
+        }
+
+        // ======================
+        // СОБЫТИЯ КАРТОЧЕК
+        // ======================
+        function attachCardEvents() {
+            const cards = document.querySelectorAll('.favorite-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('.favorite-add')) return;
+                    longPressTimer = setTimeout(() => {
+                        showContextMenu(card);
+                    }, 500);
+                });
+
+                card.addEventListener('mouseup', () => {
+                    clearTimeout(longPressTimer);
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    clearTimeout(longPressTimer);
+                });
+
+                card.addEventListener('touchstart', (e) => {
+                    if (e.target.closest('.favorite-add')) return;
+                    longPressTimer = setTimeout(() => {
+                        showContextMenu(card);
+                    }, 500);
+                });
+
+                card.addEventListener('touchend', () => {
+                    clearTimeout(longPressTimer);
+                });
+
+                card.addEventListener('touchmove', () => {
+                    clearTimeout(longPressTimer);
+                });
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.favorite-add')) return;
+
+                    const productId = card.dataset.id;
+
+                    if (selectMode) {
+                        handleSelectForDish(productId);
+                    } else {
+                        window.location.href = `product-card.html?productId=${productId}&source=favorites`;
+                    }
+                });
+
+                const addBtn = card.querySelector('.favorite-add');
+                addBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const productId = card.dataset.id;
+                    handleAddToDay(productId);
+                });
+            });
+        }
+
+        // ======================
+        // КОНТЕКСТНОЕ МЕНЮ
+        // ======================
+        function showContextMenu(card) {
+            currentCard = card;
+            contextMenu.classList.add('active');
+            contextOverlay.classList.add('active');
+        }
+
+        function hideContextMenu() {
+            contextMenu.classList.remove('active');
+            contextOverlay.classList.remove('active');
+            currentCard = null;
+        }
+
+        contextOverlay.addEventListener('click', hideContextMenu);
+
+        document.querySelector('.context-item.delete').addEventListener('click', async () => {
+            if (!currentCard) return;
+
+            const productId = currentCard.dataset.id;
+
+            if (!confirm(t('favorites.confirmDelete'))) {
+                hideContextMenu();
+                return;
+            }
+
+            try {
+                await removeFromFavorites(productId);
+                await loadFavorites();
+                hideContextMenu();
+            } catch (error) {
+                console.error('Error removing from favorites:', error);
+                alert(t('favorites.errorRemoving'));
+            }
+        });
+
+        document.querySelector('.context-item.move-top').addEventListener('click', async () => {
+            if (!currentCard) return;
+
+            const productId = currentCard.dataset.id;
+
+            try {
+                await moveFavoriteToTop(productId);
+                await loadFavorites();
+                hideContextMenu();
+            } catch (error) {
+                console.error('Error moving to top:', error);
+                alert(t('favorites.errorMoving'));
+            }
+        });
+
+        document.querySelector('.context-item.move-up').addEventListener('click', async () => {
+            if (!currentCard) return;
+
+            const productId = currentCard.dataset.id;
+            const currentIndex = filteredFavorites.findIndex(f => f.id === productId);
+
+            if (currentIndex <= 0) {
+                hideContextMenu();
+                return;
+            }
+
+            const previousProduct = filteredFavorites[currentIndex - 1];
+
+            try {
+                await swapFavorites(productId, previousProduct.id);
+                await loadFavorites();
+                hideContextMenu();
+            } catch (error) {
+                console.error('Error moving up:', error);
+                alert(t('favorites.errorMoving'));
+            }
+        });
+
+        document.querySelector('.context-item.move-down').addEventListener('click', async () => {
+            if (!currentCard) return;
+
+            const productId = currentCard.dataset.id;
+            const currentIndex = filteredFavorites.findIndex(f => f.id === productId);
+
+            if (currentIndex >= filteredFavorites.length - 1) {
+                hideContextMenu();
+                return;
+            }
+
+            const nextProduct = filteredFavorites[currentIndex + 1];
+
+            try {
+                await swapFavorites(productId, nextProduct.id);
+                await loadFavorites();
+                hideContextMenu();
+            } catch (error) {
+                console.error('Error moving down:', error);
+                alert(t('favorites.errorMoving'));
+            }
+        });
+
+        document.querySelector('.context-item.move-bottom').addEventListener('click', async () => {
+            if (!currentCard) return;
+
+            const productId = currentCard.dataset.id;
+
+            try {
+                await moveFavoriteToBottom(productId);
+                await loadFavorites();
+                hideContextMenu();
+            } catch (error) {
+                console.error('Error moving to bottom:', error);
+                alert(t('favorites.errorMoving'));
+            }
+        });
+
+        // ======================
+        // ДОБАВЛЕНИЕ В ДЕНЬ
+        // ======================
+        async function handleAddToDay(productId) {
+            const favorite = allFavorites.find(f => f.id === productId);
+            if (!favorite) return;
+
+            if (selectMode) {
+                // Режим выбора для блюда - сохраняем в localStorage
+                const ingredientCopy = {
+                    ...favorite,
+                    id: generateUUID()
+                };
+                localStorage.setItem('newDishIngredient', JSON.stringify(ingredientCopy));
+                window.location.href = 'create-dish.html';
+                return;
+            }
+
+            // Обычный режим - добавляем в день
+            const currentDate = getCurrentDate();
+
+            try {
+                const productCopy = {
+                    ...favorite,
+                    id: generateUUID(),
+                    timestamp: Date.now()
+                };
+
+                await addProductToDay(currentDate, productCopy);
+
+                alert(t('messages.productAdded'));
+
+                window.location.href = `index.html?date=${currentDate}`;
+            } catch (error) {
+                console.error('Error adding to day:', error);
+                alert(t('messages.error'));
+            }
+        }
+
+        // ======================
+        // РЕЖИМ ВЫБОРА ДЛЯ БЛЮДА
+        // ======================
+        function handleSelectForDish(productId) {
+            const favorite = allFavorites.find(f => f.id === productId);
+            if (!favorite) return;
+
+            localStorage.setItem('newDishIngredient', JSON.stringify(favorite));
+            window.location.href = 'create-dish.html';
+        }
+
+        // ======================
+        // ЗАПУСК
+        // ======================
+        init();
+    </script>
+</body>
+</html>

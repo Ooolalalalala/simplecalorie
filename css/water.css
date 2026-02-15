@@ -1,0 +1,82 @@
+/* Страница добавления воды/напитков */
+
+/* Селектор категории */
+.drink-selector {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.selector-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.drink-select {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.drink-select:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Матрица объемов */
+.volume-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.volume-btn {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.volume-btn:hover {
+  background-color: rgba(6, 182, 212, 0.05);
+  transform: scale(1.05);
+}
+
+.volume-btn.selected {
+  border-color: var(--color-water);
+  background-color: rgba(6, 182, 212, 0.1);
+}
+
+.volume-btn:active {
+  transform: scale(0.98);
+}
+
+.drop-icon {
+  width: 100%;
+  height: auto;
+  max-width: 100px;
+}
+
+/* Кнопка добавления */
+.add-drink-btn {
+  width: 100%;
+  margin-top: var(--spacing-lg);
+}

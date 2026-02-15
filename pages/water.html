@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A1A1A">
+    <title>SimpleCalorie - Добавить воду</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/water.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <a href="javascript:history.back()" class="header-icon">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <h1 data-i18n="water.title">Добавить напиток</h1>
+            <div class="header-icon"></div>
+        </header>
+
+        <main class="main-content">
+            <div class="drink-selector">
+                <label class="selector-label" data-i18n="water.category">Категория</label>
+                <select class="drink-select" id="drinkCategory">
+                                    <!-- Options генерируются в JS -->
+                </select>
+            </div>
+
+            <div class="volume-grid">
+                <button class="volume-btn" data-volume="100">
+                    <svg class="drop-icon" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 C30 30, 10 50, 10 80 C10 105, 27.5 125, 50 125 C72.5 125, 90 105, 90 80 C90 50, 70 30, 50 10 Z" fill="#06B6D4"/>
+                        <text x="50" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="bold">100</text>
+                        <text x="50" y="95" text-anchor="middle" fill="white" font-size="12">мл</text>
+                    </svg>
+                </button>
+
+                <button class="volume-btn" data-volume="200">
+                    <svg class="drop-icon" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 C30 30, 10 50, 10 80 C10 105, 27.5 125, 50 125 C72.5 125, 90 105, 90 80 C90 50, 70 30, 50 10 Z" fill="#06B6D4"/>
+                        <text x="50" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="bold">200</text>
+                        <text x="50" y="95" text-anchor="middle" fill="white" font-size="12">мл</text>
+                    </svg>
+                </button>
+
+                <button class="volume-btn" data-volume="300">
+                    <svg class="drop-icon" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 C30 30, 10 50, 10 80 C10 105, 27.5 125, 50 125 C72.5 125, 90 105, 90 80 C90 50, 70 30, 50 10 Z" fill="#06B6D4"/>
+                        <text x="50" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="bold">300</text>
+                        <text x="50" y="95" text-anchor="middle" fill="white" font-size="12">мл</text>
+                    </svg>
+                </button>
+
+                <button class="volume-btn" data-volume="500">
+                    <svg class="drop-icon" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 C30 30, 10 50, 10 80 C10 105, 27.5 125, 50 125 C72.5 125, 90 105, 90 80 C90 50, 70 30, 50 10 Z" fill="#06B6D4"/>
+                        <text x="50" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="bold">500</text>
+                        <text x="50" y="95" text-anchor="middle" fill="white" font-size="12">мл</text>
+                    </svg>
+                </button>
+
+                <button class="volume-btn" data-volume="700">
+                    <svg class="drop-icon" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 C30 30, 10 50, 10 80 C10 105, 27.5 125, 50 125 C72.5 125, 90 105, 90 80 C90 50, 70 30, 50 10 Z" fill="#06B6D4"/>
+                        <text x="50" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="bold">700</text>
+                        <text x="50" y="95" text-anchor="middle" fill="white" font-size="12">мл</text>
+                    </svg>
+                </button>
+
+                <button class="volume-btn" data-volume="1000">
+                    <svg class="drop-icon" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 C30 30, 10 50, 10 80 C10 105, 27.5 125, 50 125 C72.5 125, 90 105, 90 80 C90 50, 70 30, 50 10 Z" fill="#06B6D4"/>
+                        <text x="50" y="75" text-anchor="middle" fill="white" font-size="22" font-weight="bold">1000</text>
+                        <text x="50" y="95" text-anchor="middle" fill="white" font-size="12">мл</text>
+                    </svg>
+                </button>
+            </div>
+
+            <button class="btn btn-primary add-drink-btn" id="addDrinkBtn" data-i18n="buttons.add">Добавить</button>
+        </main>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/i18n.js"></script>
+
+    <script>
+        let drinksData = null;
+        let selectedCategory = 'water';
+        let selectedVolume = null;
+
+        async function init() {
+                    await initDB();
+                    await initI18n();
+
+                    // Генерируем options после загрузки переводов
+                    const select = document.getElementById('drinkCategory');
+                    select.innerHTML = `
+                        <option value="water" selected>${t('water.drinks.water')}</option>
+                        <option value="hot">${t('water.drinks.hot')}</option>
+                        <option value="juice">${t('water.drinks.juice')}</option>
+                        <option value="cola">${t('water.drinks.cola')}</option>
+                        <option value="low-calorie">${t('water.drinks.lowCalorie')}</option>
+                    `;
+
+                    // Загружаем данные напитков
+                    const response = await fetch('../data/drinks.json');
+                    drinksData = await response.json();
+                }
+
+        const drinkSelect = document.getElementById('drinkCategory');
+        drinkSelect.addEventListener('change', function() {
+            selectedCategory = this.value;
+        });
+
+        const volumeBtns = document.querySelectorAll('.volume-btn');
+        volumeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                volumeBtns.forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedVolume = parseInt(this.dataset.volume);
+            });
+        });
+
+        const addBtn = document.getElementById('addDrinkBtn');
+        addBtn.addEventListener('click', async function() {
+            if (!selectedVolume) {
+                alert(t('messages.selectVolume'));
+                return;
+            }
+
+            const currentDate = getCurrentDate();
+            const drinkInfo = drinksData[selectedCategory];
+            const factor = selectedVolume / 100;
+
+            // Загружаем картинку как base64
+            let photoBase64 = null;
+            try {
+                const imgPath = `../images/drinks/${drinkInfo.image}`;
+                const imgResponse = await fetch(imgPath);
+                const blob = await imgResponse.blob();
+                photoBase64 = await blobToBase64(blob);
+            } catch (error) {
+                console.error('Ошибка загрузки картинки:', error);
+            }
+
+            const product = {
+                id: generateUUID(),
+                name: drinkInfo.name,
+                calories: drinkInfo.per100ml.calories * factor,
+                protein: drinkInfo.per100ml.protein * factor,
+                fat: drinkInfo.per100ml.fat * factor,
+                carbs: drinkInfo.per100ml.carbs * factor,
+                sugar: drinkInfo.per100ml.sugar * factor,
+                amount: selectedVolume,
+                unit: 'ml',
+                category: 'drinks',
+                photo: photoBase64,
+                loading: false
+            };
+
+            await addProductToDay(currentDate, product);
+
+            alert(t('messages.drinkAdded'));
+            window.location.href = `index.html?date=${currentDate}`;
+        });
+
+        init();
+    </script>
+</body>
+</html>
