@@ -84,8 +84,10 @@ function getApiKey() {
      })
    });
 
-  if (!response.ok) {
+if (!response.ok) {
     const error = await response.json();
+    // Выводим текст ошибки OpenAI прямо на экран телефона
+    alert('Ошибка OpenAI: ' + (error.error?.message || 'Неизвестная ошибка API'));
     throw new Error(error.error?.message || 'API request failed');
   }
 
@@ -124,8 +126,10 @@ function getApiKey() {
       amount: Number(data.amount) || 100,
       unit: data.unit || 'g'
     };
-  } catch (error) {
+} catch (error) {
     console.error('Error parsing GPT response:', error);
+    // Сообщаем, если ИИ прислал текст вместо правильных данных
+    alert('Ошибка обработки ответа ИИ: ' + error.message);
     throw new Error('Failed to parse AI response');
   }
 }
@@ -277,5 +281,6 @@ if (typeof module !== 'undefined' && module.exports) {
     createLoadingProduct
   };
 }
+
 
 
