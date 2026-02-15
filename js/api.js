@@ -113,15 +113,15 @@ function getApiKey() {
       throw new Error('Invalid response format');
     }
 
-    // Округление до 1 знака
+    // Округление с защитой от ошибок (гарантируем числа)
     return {
-      name: data.name,
-      calories: parseFloat(data.calories.toFixed(1)),
-      protein: parseFloat((data.protein || 0).toFixed(1)),
-      fat: parseFloat((data.fat || 0).toFixed(1)),
-      carbs: parseFloat((data.carbs || 0).toFixed(1)),
-      sugar: parseFloat((data.sugar || 0).toFixed(1)),
-      amount: data.amount,   //  || 100,
+      name: data.name || 'Продукт',
+      calories: Number(data.calories) || 0,
+      protein: Number(data.protein) || 0,
+      fat: Number(data.fat) || 0,
+      carbs: Number(data.carbs) || 0,
+      sugar: Number(data.sugar) || 0,
+      amount: Number(data.amount) || 100,
       unit: data.unit || 'g'
     };
   } catch (error) {
@@ -277,4 +277,5 @@ if (typeof module !== 'undefined' && module.exports) {
     createLoadingProduct
   };
 }
+
 
