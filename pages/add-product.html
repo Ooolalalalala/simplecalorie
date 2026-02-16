@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A1A1A">
+    <title>SimpleCalorie - Добавить продукт</title>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/add-product.css">
+    
+    <style>
+        /* Photo Selection Popup */
+        .photo-selection-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .photo-selection-popup.active {
+            display: flex;
+        }
+
+        .photo-selection-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px 16px 0 0;
+            padding: var(--spacing-md);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .photo-selection-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .photo-selection-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .photo-selection-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .photo-selection-btn:active {
+            background: var(--primary-dark);
+        }
+
+        .photo-selection-btn.secondary {
+            background: var(--background-secondary);
+            color: var(--text-primary);
+        }
+
+        .photo-selection-btn.secondary:active {
+            background: #E5E7EB;
+        }
+
+        .photo-selection-cancel {
+            margin-top: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+      <!-- Photo Selection Popup -->
+      <div class="photo-selection-popup" id="photoSelectionPopup">
+          <div class="photo-selection-content">
+              <div class="photo-selection-title" data-i18n="photoSelection.title">Выберите источник</div>
+              <div class="photo-selection-buttons">
+                  <button class="photo-selection-btn" id="selectCameraBtn">
+                      <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      </svg>
+                      <span data-i18n="photoSelection.camera">Камера</span>
+                  </button>
+                  <button class="photo-selection-btn secondary" id="selectGalleryBtn">
+                      <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                      <span data-i18n="photoSelection.gallery">Галерея</span>
+                  </button>
+              </div>
+              <button class="photo-selection-cancel" id="cancelPhotoSelectionBtn" data-i18n="buttons.cancel">Отмена</button>
+          </div>
+      </div>
+
+      <!-- Loading overlay -->
+      <div class="loading-overlay" id="loadingOverlay">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Анализ ИИ...</div>
+          <button class="loading-cancel" id="cancelBtn">Отменить</button>
+      </div>
+
+      <div class="app-container">
+        <!-- Заголовок -->
+        <header class="app-header">
+            <a href="#" id="backBtn" class="header-icon">
+                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <h1 data-i18n="addProduct.title">Добавить продукт</h1>
+            <div class="header-icon"></div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+
+            <!-- Селектор способа добавления -->
+            <div class="method-selector">
+                <label class="method-option">
+                    <input type="radio" name="addMethod" value="manual" checked>
+                    <span class="method-label">
+                        <span class="method-emoji">🍽️</span>
+                        <span class="method-text" data-i18n="addProduct.methods.manual">Добавить описание или фото</span>
+                    </span>
+                </label>
+
+                <label class="method-option">
+                    <input type="radio" name="addMethod" value="ai-photo">
+                    <span class="method-label">
+                        <span class="method-emoji">📷</span>
+                        <span class="method-text" data-i18n="addProduct.methods.aiPhoto">Добавить с ИИ по фото</span>
+                    </span>
+                </label>
+
+                <label class="method-option">
+                    <input type="radio" name="addMethod" value="ai-text">
+                    <span class="method-label">
+                        <span class="method-emoji">📝</span>
+                        <span class="method-text" data-i18n="addProduct.methods.aiText">Добавить с ИИ по описанию</span>
+                    </span>
+                </label>
+
+                <label class="method-option">
+                    <input type="radio" name="addMethod" value="dish">
+                    <span class="method-label">
+                        <span class="method-emoji">📋</span>
+                        <span class="method-text" data-i18n="addProduct.methods.table">Добавить по таблице</span>
+                    </span>
+                </label>
+            </div>
+
+            <!-- Название -->
+            <div class="field-group">
+                <label class="field-label">
+                    <span data-i18n="product.name">Название</span>
+                    <span class="optional" data-i18n="addProduct.optional">(опционально)</span>
+                </label>
+                <input type="text" class="field-input" id="productName" data-i18n-placeholder="product.namePlaceholder">
+            </div>
+
+            <!-- Загрузка фото -->
+            <div class="field-group" id="photoSection">
+                <label class="field-label">
+                    <span data-i18n="product.photo">Фото</span>
+                    <span class="optional" data-i18n="addProduct.optional">(опционально)</span>
+                </label>
+                <div class="photo-upload">
+                    <!-- Первое фото -->
+                    <!-- Hidden file inputs для первого фото -->
+                    <input type="file" id="photoInput1Camera" accept="image/*" capture="environment" class="photo-input" style="display: none;">
+                    <input type="file" id="photoInput1Gallery" accept="image/*" class="photo-input" style="display: none;">
+                    
+                    <div class="photo-upload-btn" id="photoBtn1">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span data-i18n="product.selectPhoto">Выбрать фото 1</span>
+                    </div>
+                    <div class="photo-preview" id="photoPreview1"></div>
+
+                    <!-- Второе фото (только для режимов кроме "dish") -->
+                    <div id="photo2Container">
+                        <!-- Hidden file inputs для второго фото -->
+                        <input type="file" id="photoInput2Camera" accept="image/*" capture="environment" class="photo-input" style="display: none;">
+                        <input type="file" id="photoInput2Gallery" accept="image/*" class="photo-input" style="display: none;">
+                        
+                        <div class="photo-upload-btn" id="photoBtn2">
+                            <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span>Выбрать фото 2</span>
+                        </div>
+                        <div class="photo-preview" id="photoPreview2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Объем -->
+            <div class="field-group">
+                <label class="field-label">
+                    <span data-i18n="product.volume">Объем</span>
+                    <span class="optional" data-i18n="addProduct.optional">(опционально)</span>
+                </label>
+                <div class="volume-input">
+                    <input type="number" class="field-input" id="productVolume" placeholder="0">
+                    <select class="unit-select-compact" id="volumeUnit">
+                        <option value="g" selected data-i18n="units.g">г</option>
+                        <option value="ml" data-i18n="units.ml">мл</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Комментарий -->
+            <div class="field-group">
+                <label class="field-label">
+                    <span data-i18n="product.comment">Комментарий для ИИ</span>
+                    <span class="optional" data-i18n="addProduct.optional">(опционально)</span>
+                </label>
+                <textarea class="field-textarea" id="productComment" placeholder="Дополнительная информация для ИИ..." rows="3"></textarea>
+            </div>
+
+            <!-- Кнопка добавления -->
+            <button class="btn btn-primary add-product-btn" id="addBtn" data-i18n="buttons.add">Добавить</button>
+
+        </main>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/i18n.js"></script>
+
+    <script>
+        let photo1Base64 = null;
+        let photo2Base64 = null;
+        let currentPhotoTarget = null; // 'photo1' или 'photo2'
+
+        // Инициализация
+        async function init() {
+            await initDB();
+            await initI18n();
+
+            // Показать/скрыть второе фото в зависимости от режима
+            updatePhotoVisibility();
+        }
+
+       // Кнопка назад с сохранением даты
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const params = new URLSearchParams(window.location.search);
+            const date = params.get('date') || getCurrentDate();
+            window.location.href = `index.html?date=${date}`;
+        });
+
+        // Photo Selection Popup
+        const photoSelectionPopup = document.getElementById('photoSelectionPopup');
+        const selectCameraBtn = document.getElementById('selectCameraBtn');
+        const selectGalleryBtn = document.getElementById('selectGalleryBtn');
+        const cancelPhotoSelectionBtn = document.getElementById('cancelPhotoSelectionBtn');
+
+        // Кнопки выбора фото
+        document.getElementById('photoBtn1').addEventListener('click', function() {
+            currentPhotoTarget = 'photo1';
+            photoSelectionPopup.classList.add('active');
+        });
+
+        document.getElementById('photoBtn2').addEventListener('click', function() {
+            currentPhotoTarget = 'photo2';
+            photoSelectionPopup.classList.add('active');
+        });
+
+        // Закрыть popup
+        function closePhotoPopup() {
+            photoSelectionPopup.classList.remove('active');
+        }
+
+        cancelPhotoSelectionBtn.addEventListener('click', closePhotoPopup);
+
+        // Клик вне popup закрывает его
+        photoSelectionPopup.addEventListener('click', function(e) {
+            if (e.target === photoSelectionPopup) {
+                closePhotoPopup();
+            }
+        });
+
+        // Выбор камеры
+        selectCameraBtn.addEventListener('click', function() {
+            if (currentPhotoTarget === 'photo1') {
+                document.getElementById('photoInput1Camera').click();
+            } else {
+                document.getElementById('photoInput2Camera').click();
+            }
+            closePhotoPopup();
+        });
+
+        // Выбор галереи
+        selectGalleryBtn.addEventListener('click', function() {
+            if (currentPhotoTarget === 'photo1') {
+                document.getElementById('photoInput1Gallery').click();
+            } else {
+                document.getElementById('photoInput2Gallery').click();
+            }
+            closePhotoPopup();
+        });
+
+        // Обработка фото 1 (камера)
+        document.getElementById('photoInput1Camera').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                photo1Base64 = await blobToBase64(file);
+                const btn = document.getElementById('photoBtn1');
+                btn.innerHTML = `<img src="${photo1Base64}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg);">`;
+            }
+        });
+
+        // Обработка фото 1 (галерея)
+        document.getElementById('photoInput1Gallery').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                photo1Base64 = await blobToBase64(file);
+                const btn = document.getElementById('photoBtn1');
+                btn.innerHTML = `<img src="${photo1Base64}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg);">`;
+            }
+        });
+
+        // Обработка фото 2 (камера)
+        document.getElementById('photoInput2Camera').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                photo2Base64 = await blobToBase64(file);
+                const btn = document.getElementById('photoBtn2');
+                btn.innerHTML = `<img src="${photo2Base64}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg);">`;
+            }
+        });
+
+        // Обработка фото 2 (галерея)
+        document.getElementById('photoInput2Gallery').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                photo2Base64 = await blobToBase64(file);
+                const btn = document.getElementById('photoBtn2');
+                btn.innerHTML = `<img src="${photo2Base64}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg);">`;
+            }
+        });
+
+        // Показать/скрыть второе фото
+        function updatePhotoVisibility() {
+            const method = document.querySelector('input[name="addMethod"]:checked').value;
+            const photo2Container = document.getElementById('photo2Container');
+
+            if (method === 'dish') {
+                // Режим таблицы - только 1 фото
+                photo2Container.style.display = 'none';
+            } else {
+                // Остальные режимы - до 2 фото
+                photo2Container.style.display = 'block';
+            }
+        }
+
+        // Слушаем смену метода
+        document.querySelectorAll('input[name="addMethod"]').forEach(radio => {
+            radio.addEventListener('change', updatePhotoVisibility);
+        });
+
+        // Кнопка добавить
+        document.getElementById('addBtn').addEventListener('click', async function() {
+            // Очищаем старые фото перед новым запросом
+            photo1Base64 = null;
+            photo2Base64 = null;
+            
+            const method = document.querySelector('input[name="addMethod"]:checked').value;
+            const name = document.getElementById('productName').value.trim();
+            const volume = parseFloat(document.getElementById('productVolume').value) || null;
+            const comment = document.getElementById('productComment').value.trim();
+
+            // Валидация
+            if (method === 'ai-photo' || method === 'ai-text' || method === 'dish') {
+                if (!checkApiKey()) {
+                    alert(t('messages.apiKeyMissing'));
+                    return;
+                }
+            }
+
+            if (method === 'ai-photo' && !photo1Base64) {
+                alert('Для анализа по фото нужно загрузить хотя бы одно фото!');
+                return;
+            }
+
+            if (method === 'ai-text' && !name) {
+                alert('Для анализа по описанию введите название или описание!');
+                return;
+            }
+
+            if (method === 'dish' && !photo1Base64) {
+                alert('Для анализа таблицы нужно загрузить фото!');
+                return;
+            }
+
+            // Параметры
+            const params = new URLSearchParams(window.location.search);
+            const target = params.get('target'); // 'dish' если добавляем в блюдо
+            const currentDate = target === 'dish' ? null : getCurrentDate();
+
+            try {
+                if (method === 'manual') {
+                    // Ручное добавление
+                    const product = {
+                        id: generateUUID(),
+                        name: name || 'Без названия',
+                        calories: 0,
+                        protein: 0,
+                        fat: 0,
+                        carbs: 0,
+                        sugar: 0,
+                        amount: volume || 0,
+                        unit: document.getElementById('volumeUnit').value,
+                        category: '',
+                        photo: photo1Base64 || null,
+                       photo2: photo2Base64 || null,
+                       loading: false
+                    };
+
+                    if (target === 'dish') {
+                        // Вернуться в блюдо с продуктом
+                        localStorage.setItem('newDishIngredient', JSON.stringify(product));
+                        window.location.href = 'create-dish.html';
+                    } else {
+                        // Добавить в день
+                        await addProductToDay(currentDate, product);
+                        alert('Продукт добавлен!');
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    // С ИИ - создаём loading продукт
+                    const loadingProduct = createLoadingProduct(name || 'Анализирую...');
+                    loadingProduct.photo = photo1Base64;
+                    loadingProduct.photo2 = photo2Base64;
+
+                    if (target !== 'dish') {
+                                            await addProductToDay(currentDate, loadingProduct);
+                                          }
+
+                                  // Показываем loading overlay
+                                  document.getElementById('loadingOverlay').classList.add('active');
+
+                                  // Получаем unit из селектора
+                                  const unit = document.getElementById('volumeUnit').value;
+
+                                  // Асинхронная обработка ИИ ДО перенаправления
+                          await processAI(method, name, volume, unit, comment, loadingProduct.id, currentDate, target);
+
+                         // Скрываем loading overlay
+                          document.getElementById('loadingOverlay').classList.remove('active');
+
+                          // Очищаем инпуты и превью
+                          document.getElementById('photoInput1Camera').value = '';
+                          document.getElementById('photoInput1Gallery').value = '';
+                          document.getElementById('photoInput2Camera').value = '';
+                          document.getElementById('photoInput2Gallery').value = '';
+                          document.getElementById('productName').value = '';
+                          document.getElementById('productVolume').value = '';
+                          document.getElementById('productComment').value = '';
+
+                          // Переход обратно ПОСЛЕ обработки
+                                        if (target === 'dish') {
+                                            window.location.href = 'create-dish.html';
+                                        } else {
+                                            window.location.href = 'index.html';
+                                        }
+                }
+            } catch (error) {
+                console.error('Ошибка добавления:', error);
+                alert('Ошибка: ' + error.message);
+            }
+        });
+
+        // Асинхронная обработка ИИ
+      async function processAI(method, name, volume, unit, comment, productId, date, target) {
+            try {
+                let result;
+
+                if (method === 'dish') {
+                    // Анализ таблицы
+                  result = await analyzeTable(photo1Base64, null, name, volume, unit, comment);
+                } else {
+                    // Анализ продукта (по фото, тексту, или оба)
+                    const photos = [photo1Base64, photo2Base64].filter(Boolean);
+                    result = await analyzeProduct(photos, name, volume, unit, comment);
+                }
+
+                // Обновляем продукт
+                result.photo = photo1Base64;
+                result.loading = false;
+
+                if (target === 'dish') {
+                    // Сохраняем для блюда
+                    localStorage.setItem('newDishIngredient', JSON.stringify(result));
+                } else {
+                    // Обновляем в дне
+                    await updateProductInDay(date, productId, result);
+                }
+
+                console.log('ИИ обработал продукт:', result);
+            } catch (error) {
+                console.error('Ошибка ИИ:', error);
+
+                if (target !== 'dish') {
+                    // Удаляем loading продукт
+                    await deleteProductFromDay(date, productId);
+                }
+            }
+        }
+
+        // Обработка отмены
+          document.getElementById('cancelBtn').addEventListener('click', function() {
+              document.getElementById('loadingOverlay').classList.remove('active');
+              window.location.href = 'index.html';
+          });
+
+          // Запуск
+          init();
+    </script>
+</body>
+</html>
