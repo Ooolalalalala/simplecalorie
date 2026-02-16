@@ -110,7 +110,7 @@
     <div class="app-container">
         <!-- Заголовок с фото -->
         <header class="product-header">
-          <a href="javascript:history.back()" class="close-btn">
+          <a href="#" id="closeBtn" class="close-btn">
              <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -150,7 +150,7 @@
                 </button>
             </div>
 
-            <input type="file" id="photoInput" accept="image/*" style="display: none;">
+            <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
             <button class="photo-add" onclick="document.getElementById('photoInput').click()">
                 <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -559,6 +559,20 @@
                 // Сохраняем в localStorage для возврата в create-dish
                 localStorage.setItem('updatedDishIngredient', JSON.stringify(updatedProduct));
                 window.location.href = 'create-dish.html';
+            }
+        });
+
+        // Кнопка закрытия с правильным возвратом
+        document.getElementById('closeBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (productSource === 'day') {
+                window.location.href = `index.html?date=${productDate}`;
+            } else if (productSource === 'favorites') {
+                window.location.href = 'favorites.html';
+            } else if (productSource === 'dish') {
+                window.location.href = 'create-dish.html';
+            } else {
+                history.back();
             }
         });
 
