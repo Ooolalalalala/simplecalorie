@@ -14,10 +14,10 @@
 <body>
     <div class="app-container">
         <header class="app-header">
-            <a href="javascript:history.back()" class="header-icon">
-                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
+            <a href="#" id="backBtn" class="header-icon">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+               </svg>
             </a>
             <h1 data-i18n="water.title">Добавить напиток</h1>
             <div class="header-icon"></div>
@@ -170,7 +170,16 @@
             window.location.href = `index.html?date=${currentDate}`;
         });
 
+        // Кнопка назад с сохранением даты
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const params = new URLSearchParams(window.location.search);
+            const date = params.get('date') || getCurrentDate();
+            window.location.href = `index.html?date=${date}`;
+        });
+
         init();
     </script>
 </body>
 </html>
+
