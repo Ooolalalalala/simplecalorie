@@ -23,9 +23,9 @@
       <div class="app-container">
         <!-- Заголовок -->
         <header class="app-header">
-            <a href="javascript:history.back()" class="header-icon">
-                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            <a href="#" id="backBtn" class="header-icon">
+                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
             </a>
             <h1 data-i18n="addProduct.title">Добавить продукт</h1>
@@ -87,7 +87,7 @@
                 </label>
                 <div class="photo-upload">
                     <!-- Первое фото -->
-                    <input type="file" id="photoInput1" accept="image/*" class="photo-input">
+                    <input type="file" id="photoInput1" accept="image/*" capture="environment" class="photo-input">
                     <label for="photoInput1" class="photo-upload-btn">
                         <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
@@ -99,7 +99,7 @@
 
                     <!-- Второе фото (только для режимов кроме "dish") -->
                     <div id="photo2Container">
-                        <input type="file" id="photoInput2" accept="image/*" class="photo-input">
+                        <input type="file" id="photoInput2" accept="image/*" capture="environment" class="photo-input">
                         <label for="photoInput2" class="photo-upload-btn">
                             <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
@@ -160,6 +160,13 @@
             // Показать/скрыть второе фото в зависимости от режима
             updatePhotoVisibility();
         }
+       // Кнопка назад с сохранением даты
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const params = new URLSearchParams(window.location.search);
+            const date = params.get('date') || getCurrentDate();
+            window.location.href = `index.html?date=${date}`;
+        });
 
         // Превью фото 1
                 document.getElementById('photoInput1').addEventListener('change', async function(e) {
@@ -201,6 +208,10 @@
 
         // Кнопка добавить
         document.getElementById('addBtn').addEventListener('click', async function() {
+            // Очищаем старые фото перед новым запросом
+            photo1Base64 = null;
+            photo2Base64 = null;
+            
             const method = document.querySelector('input[name="addMethod"]:checked').value;
             const name = document.getElementById('productName').value.trim();
             const volume = parseFloat(document.getElementById('productVolume').value) || null;
@@ -282,8 +293,15 @@
                                   // Асинхронная обработка ИИ ДО перенаправления
                           await processAI(method, name, volume, unit, comment, loadingProduct.id, currentDate, target);
 
-                          // Скрываем loading overlay
+                         // Скрываем loading overlay
                           document.getElementById('loadingOverlay').classList.remove('active');
+
+                          // Очищаем инпуты и превью
+                          document.getElementById('photoInput1').value = '';
+                          document.getElementById('photoInput2').value = '';
+                          document.getElementById('productName').value = '';
+                          document.getElementById('productVolume').value = '';
+                          document.getElementById('productComment').value = '';
 
                           // Переход обратно ПОСЛЕ обработки
                                         if (target === 'dish') {
@@ -346,3 +364,4 @@
     </script>
 </body>
 </html>
+
