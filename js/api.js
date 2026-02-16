@@ -149,8 +149,8 @@ async function analyzeProduct(photos = [], name = '', volume = null, unit = '', 
   // Формируем контент сообщения
   const content = [];
 
-  // Добавляем фото (OpenAI формат)
-    photos.forEach((photoBase64) => {
+  // Добавляем фото (OpenAI формат) - только валидные
+    photos.filter(Boolean).forEach((photoBase64) => {
       content.push({
         type: 'image_url',
         image_url: {
@@ -158,6 +158,7 @@ async function analyzeProduct(photos = [], name = '', volume = null, unit = '', 
         }
       });
     });
+
 
   // Формируем текстовую часть
     let textPrompt = promptsData.analyzeProduct;
@@ -281,6 +282,7 @@ if (typeof module !== 'undefined' && module.exports) {
     createLoadingProduct
   };
 }
+
 
 
 
